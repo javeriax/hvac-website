@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   ServiceFlow — theme tokens
+   Dark is the default surface (a control room), light is "Frost".
+   ==========================================================================*/
+
+:root,
+:root[data-theme='dark'] {
+  --c-page: 6 10 17;
+  --c-surface: 12 18 28;
+  --c-raised: 18 26 39;
+  --c-sunken: 4 7 12;
+  --c-ink: 230 238 248;
+  --c-muted: 138 155 176;
+  --c-faint: 90 105 126;
+  --c-line: 40 54 74;
+
+  --c-frost: 95 227 216;
+  --c-frost-soft: 24 62 66;
+  --c-frost-deep: 20 178 168;
+
+  --c-ember: 255 122 69;
+  --c-ember-soft: 68 38 26;
+  --c-ember-deep: 224 88 38;
+
+  --c-ok: 74 214 152;
+  --c-warn: 245 191 84;
+  --c-danger: 255 107 107;
+  --c-info: 122 162 255;
+
+  --grid-line: rgb(255 255 255 / 0.028);
+  --grain-opacity: 0.16;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --c-page: 241 244 248;
+  --c-surface: 255 255 255;
+  --c-raised: 255 255 255;
+  --c-sunken: 232 237 243;
+  --c-ink: 12 20 33;
+  --c-muted: 90 107 128;
+  --c-faint: 133 150 171;
+  --c-line: 215 223 233;
+
+  --c-frost: 13 148 138;
+  --c-frost-soft: 213 245 241;
+  --c-frost-deep: 8 110 103;
+
+  --c-ember: 214 78 30;
+  --c-ember-soft: 253 231 220;
+  --c-ember-deep: 168 58 20;
+
+  --c-ok: 22 148 100;
+  --c-warn: 178 122 12;
+  --c-danger: 205 47 47;
+  --c-info: 51 96 208;
+
+  --grid-line: rgb(12 20 33 / 0.035);
+  --grain-opacity: 0.05;
+  color-scheme: light;
+}
+
+@layer base {
+  * {
+    @apply border-line;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-page text-ink font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
+    min-height: 100dvh;
+  }
+
+  /* The instrument grid — a faint 56px lattice behind everything. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 130% 90% at 50% 0%, #000 35%, transparent 78%);
+  }
+
+  ::selection {
+    background: rgb(var(--c-frost) / 0.28);
+    color: rgb(var(--c-ink));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-frost));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-[-0.02em];
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  input, textarea, select, button {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Numerics read as instrument output everywhere in the product. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    letter-spacing: -0.02em;
+  }
+
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-line));
+    border-radius: 99px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--c-faint)); background-clip: content-box; }
+}
+
+@layer components {
+  /* --------------------------------- surfaces -------------------------------- */
+  .card {
+    @apply relative rounded-card border border-line bg-surface;
+  }
+
+  .card-quiet {
+    @apply relative rounded-card border border-line bg-surface/60;
+  }
+
+  /* A hairline that fades out at both ends — used as a section rule. */
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(var(--c-line)), transparent);
+  }
+
+  /* Frosted panel used for navbars and sticky headers. */
+  .glass {
+    background: rgb(var(--c-page) / 0.72);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  }
+
+  /* --------------------------------- controls -------------------------------- */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-pill
+           px-5 py-2.5 text-sm font-medium transition-all duration-200
+           disabled:pointer-events-none disabled:opacity-45;
+  }
+
+  .btn-primary {
+    @apply btn text-[rgb(var(--c-sunken))];
+    background-image: linear-gradient(100deg, rgb(var(--c-frost)), rgb(var(--c-frost-deep)));
+    box-shadow: 0 6px 20px -8px rgb(var(--c-frost) / 0.75);
+  }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-ember {
+    @apply btn text-white;
+    background-image: linear-gradient(100deg, rgb(var(--c-ember)), rgb(var(--c-ember-deep)));
+    box-shadow: 0 6px 20px -8px rgb(var(--c-ember) / 0.75);
+  }
+  .btn-ember:hover { filter: brightness(1.06); transform: translateY(-1px); }
+
+  .btn-ghost {
+    @apply btn border border-line bg-transparent text-ink hover:bg-raised;
+  }
+
+  .btn-soft {
+    @apply btn bg-raised text-ink hover:bg-sunken;
+  }
+
+  .btn-sm { @apply px-3.5 py-1.5 text-[13px]; }
+  .btn-xs { @apply px-2.5 py-1 text-xs; }
+
+  /* ---------------------------------- fields --------------------------------- */
+  .field {
+    @apply w-full rounded-xl border border-line bg-sunken px-3.5 py-2.5 text-sm
+           text-ink placeholder:text-faint transition-colors;
+  }
+  .field:focus {
+    @apply outline-none;
+    border-color: rgb(var(--c-frost) / 0.9);
+    box-shadow: 0 0 0 3px rgb(var(--c-frost) / 0.14);
+  }
+  .field:disabled { @apply opacity-55; }
+
+  .label {
+    @apply mb-1.5 block text-2xs font-semibold uppercase tracking-[0.14em] text-faint;
+  }
+
+  /* --------------------------------- eyebrow --------------------------------- */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-2xs font-semibold uppercase tracking-[0.2em] text-faint;
+  }
+
+  /* Editorial section index — 01 / 02 / 03 */
+  .index-mark {
+    @apply font-mono text-2xs tracking-[0.2em] text-frost;
+  }
+
+  /* ---------------------------------- pills ---------------------------------- */
+  /* Status reads as a leading bar + label rather than a filled bubble. */
+  .pill {
+    @apply inline-flex items-center gap-2 rounded-md bg-raised py-1 pl-2 pr-2.5
+           text-2xs font-semibold uppercase tracking-[0.1em];
+  }
+  .pill::before {
+    content: '';
+    width: 3px;
+    height: 12px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  /* --------------------------------- utility --------------------------------- */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-underline:hover { background-size: 100% 1px; }
+
+  .thermal-text {
+    background-image: linear-gradient(100deg, rgb(var(--c-frost)), rgb(var(--c-ember)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Thin scroll shadow container for wide tables. */
+  .scroll-x {
+    @apply overflow-x-auto;
+    scrollbar-width: thin;
+  }
+}
+
+@layer utilities {
+  .stack-fade > * {
+    animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .stack-fade > *:nth-child(1) { animation-delay: 0.02s; }
+  .stack-fade > *:nth-child(2) { animation-delay: 0.07s; }
+  .stack-fade > *:nth-child(3) { animation-delay: 0.12s; }
+  .stack-fade > *:nth-child(4) { animation-delay: 0.17s; }
+  .stack-fade > *:nth-child(5) { animation-delay: 0.22s; }
+  .stack-fade > *:nth-child(6) { animation-delay: 0.27s; }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  body::before, .no-print { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card { border-color: #ddd; box-shadow: none; }
+}

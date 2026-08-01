@@ -1,0 +1,13 @@
+{
+  "name": "serviceflow-hvac",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ServiceFlow — HVAC Service Management System for ArcticAir HVAC Solutions",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:server dev:client",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "seed": "npm --prefix server run seed",
+    "build": "npm --prefix server run build && npm --prefix client run build"
+  }
+}
