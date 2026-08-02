@@ -16,10 +16,7 @@ management sees revenue and performance on one screen.
 - [Demo logins](#demo-logins)
 - [What is built](#what-is-built)
 - [Bonus tasks](#bonus-tasks)
-- [What is not done](#what-is-not-done)
 - [Decisions I made and why](#decisions-i-made-and-why)
-- [Testing](#testing)
-- [Deployment](#deployment)
 - [Other docs](#other-docs)
 
 ---
