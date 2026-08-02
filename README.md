@@ -9,17 +9,26 @@ management sees revenue and performance on one screen.
 
 ---
 
-## Contents
+## Table of contents
 
+- [Project docs](#project-docs)
 - [Tech stack](#tech-stack)
 - [How to run it](#how-to-run-it)
 - [Demo logins](#demo-logins)
 - [What is built](#what-is-built)
 - [Bonus tasks](#bonus-tasks)
 - [Decisions I made and why](#decisions-i-made-and-why)
+<<<<<<< HEAD
 - [Other docs](#other-docs)
+=======
+- [Folder layout](#folder-layout)
+>>>>>>> 9c75e43 (Update README with env setup instructions and project navigation)
 
 ---
+
+## Project docs
+
+https://docs.google.com/document/d/1MdKPvUGpyaZpOxRmYunBkmN80uygnynva80PTDuYpJE/edit?usp=sharing
 
 ## Tech stack
 
@@ -47,11 +56,21 @@ You need Node 18+ and a MongoDB connection string.
 
 **1. Set up the server env**
 
+Create `server/.env` from the template and fill in the required values.
+
 ```bash
 cp server/.env.example server/.env
 ```
 
-Fill in `MONGODB_URI`, `JWT_SECRET` and the Cloudinary keys.
+Required values:
+
+- `MONGODB_URI`
+- `JWT_SECRET`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+
+If you do not want to keep a separate `.env.example` file, you can instead add these keys directly to `README.md` as the documented template reference.
 
 **2. Install**
 
@@ -85,7 +104,7 @@ npm --prefix client run dev
 Site: http://localhost:3000 · API health check: http://localhost:5050/api/health
 
 **Note on ports.** The API runs on 5050, not 5000, because 5000 was already taken on the machine
-this was built on. If you change it, update `NEXT_PUBLIC_API_URL` in `client/.env.local` too, and add
+this was built on. If you change it, update `NEXT_PUBLIC_API_URL` in the client environment and add
 the new frontend origin to the CORS list in `server/src/app.ts`.
 
 ---
@@ -104,7 +123,7 @@ them in when you click one.
 
 Other technicians: priya@, dmitri@, aaliyah@, tomas@, grace@arcticair.com.
 
-**A good 3-minute walkthrough**
+**A example walkthrough**
 
 1. Customer: approve a pending quotation.
 2. Dispatcher: the approved job appears, assign a technician from the board.
@@ -234,18 +253,25 @@ runs on the 1st of a month, which makes a working dashboard look broken during a
 ```
 hvac-website/
 ├── client/                  Next.js frontend
-│   └── src/
-│       ├── app/(site)/      Public website
-│       ├── app/dashboard/   The four role dashboards
-│       ├── components/      Shared UI, charts, icons, dashboard pieces
-│       └── lib/             API client, auth, theme, formatting, types
+│   ├── public/              Static assets
+│   ├── src/
+│   │   ├── app/             Next.js App Router pages
+│   │   │   ├── (site)/      Public marketing pages
+│   │   │   └── dashboard/   Role-based logged-in dashboards
+│   │   ├── components/      Shared UI, charts, icons, dashboard pieces
+│   │   └── lib/             API client, auth, theme, formatting, types
+│   ├── package.json
+│   └── tsconfig.json
 ├── server/                  Express API
-│   └── src/
-│       ├── models/          12 Mongoose models
-│       ├── controllers/     Business logic
-│       ├── routes/          One router per resource
-│       ├── middleware/      Auth, errors, file upload
-│       ├── services/        Notification triggers
-│       └── seed/            Demo data generator
+│   ├── src/
+│   │   ├── config/          Environment, database, Cloudinary
+│   │   ├── controllers/     Business logic
+│   │   ├── middleware/      Auth, errors, file upload
+│   │   ├── models/          Mongoose schemas
+│   │   ├── routes/          One router per resource
+│   │   ├── seed/            Demo data generator
+│   │   └── server.ts        API bootstrap
+│   ├── package.json
+│   └── tsconfig.json
 └── docs/                    Diagrams, schema, API, test plan
 ```
