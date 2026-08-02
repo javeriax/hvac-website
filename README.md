@@ -19,8 +19,6 @@ management sees revenue and performance on one screen.
 - [Bonus tasks](#bonus-tasks)
 - [Decisions I made and why](#decisions-i-made-and-why)
 
-=======
-- [Folder layout](#folder-layout)
 >>>>>>> 9c75e43 (Update README with env setup instructions and project navigation)
 
 ---
@@ -246,31 +244,3 @@ The seeder uses a fixed random seed so numbers stay stable between runs, and it 
 a few payments on today's date. Without that the "revenue today" tile reads $0 whenever the seed
 runs on the 1st of a month, which makes a working dashboard look broken during a demo.
 
-
-## Folder layout
-
-```
-hvac-website/
-├── client/                  Next.js frontend
-│   ├── public/              Static assets
-│   ├── src/
-│   │   ├── app/             Next.js App Router pages
-│   │   │   ├── (site)/      Public marketing pages
-│   │   │   └── dashboard/   Role-based logged-in dashboards
-│   │   ├── components/      Shared UI, charts, icons, dashboard pieces
-│   │   └── lib/             API client, auth, theme, formatting, types
-│   ├── package.json
-│   └── tsconfig.json
-├── server/                  Express API
-│   ├── src/
-│   │   ├── config/          Environment, database, Cloudinary
-│   │   ├── controllers/     Business logic
-│   │   ├── middleware/      Auth, errors, file upload
-│   │   ├── models/          Mongoose schemas
-│   │   ├── routes/          One router per resource
-│   │   ├── seed/            Demo data generator
-│   │   └── server.ts        API bootstrap
-│   ├── package.json
-│   └── tsconfig.json
-└── docs/                    Diagrams, schema, API, test plan
-```
