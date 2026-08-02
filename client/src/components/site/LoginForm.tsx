@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { AuthShell } from './AuthShell';
-import { IconArrowRight, IconSpark } from '@/components/icons';
+import { IconSpark } from '@/components/icons';
 import { Alert, Button, TextField } from '@/components/ui';
 import { ApiError } from '@/lib/api';
 import { HOME_FOR, useAuth } from '@/lib/auth';
@@ -57,7 +57,7 @@ export function LoginForm() {
   return (
     <AuthShell
       title="Everything about your system, in one place."
-      lede="Approve quotations, watch the technician get assigned, read the service report and settle invoices — without a single phone call."
+      lede="Approve quotations, watch the technician get assigned, read the service report and settle invoices, without a single phone call."
       points={[
         'Approve or decline quotations online',
         'Live technician assignment and arrival status',
@@ -74,7 +74,7 @@ export function LoginForm() {
       }
     >
       <h2 className="text-[21px] font-semibold">Sign in</h2>
-      <p className="mt-1.5 text-[13.5px] text-muted">Welcome back — pick up where you left off.</p>
+      <p className="mt-1.5 text-[13.5px] text-muted">Welcome back, pick up where you left off.</p>
 
       {error && (
         <div className="mt-5">
@@ -104,7 +104,6 @@ export function LoginForm() {
 
         <Button type="submit" loading={busy} className="w-full">
           {busy ? 'Signing in' : 'Sign in'}
-          {!busy && <IconArrowRight className="h-4 w-4" />}
         </Button>
       </form>
 

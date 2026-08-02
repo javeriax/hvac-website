@@ -343,7 +343,7 @@ export default function CustomerContractsPage() {
         open={renewOpen !== null}
         onClose={() => setRenewOpen(null)}
         title="Renew your maintenance plan"
-        subtitle="The new term begins where the current one ends — no gap in coverage."
+        subtitle="The new term begins where the current one ends, no gap in coverage."
         footer={
           <>
             <Button variant="ghost" size="sm" onClick={() => setRenewOpen(null)}>

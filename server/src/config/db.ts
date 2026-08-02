@@ -15,13 +15,12 @@ const isDnsFailure = (err: unknown) => {
 };
 
 /**
- * Connects to MongoDB.
+ * Connect to MongoDB.
  *
- * `mongodb+srv://` needs a DNS SRV lookup, which Node performs through c-ares
- * rather than the OS resolver. On machines whose only configured nameservers are
- * IPv6 (or behind a resolver that refuses SRV), that lookup fails even though
- * ordinary hostname resolution works. When that happens we retry with the
- * explicit replica-set seed list from MONGODB_URI_FALLBACK.
+ * mongodb+srv:// needs a DNS SRV record, and Node resolves those with c-ares
+ * instead of the OS resolver. On a machine whose only nameservers are IPv6 that
+ * lookup fails even though ordinary hostname lookups work fine. When we see that
+ * specific failure we retry with the plain host list in MONGODB_URI_FALLBACK.
  */
 export async function connectDB(): Promise<typeof mongoose> {
   try {

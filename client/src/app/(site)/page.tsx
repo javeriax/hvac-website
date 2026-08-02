@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import { Reveal, SectionHeading, ThermostatDial } from '@/components/brand';
-import { ServiceCard } from '@/components/site/ServiceCard';
+import { ServiceRegister } from '@/components/site/ServiceRegister';
 import { PlanGrid } from '@/components/site/PlanGrid';
 import { TestimonialWall } from '@/components/site/TestimonialWall';
 import {
-  IconArrowRight,
   IconCheck,
   IconClock,
   IconFlame,
@@ -53,14 +52,13 @@ export default function HomePage() {
 
             <p className="mt-6 max-w-xl text-[16.5px] leading-relaxed text-muted">
               Installation, emergency repair and preventive maintenance for homes and businesses
-              across Arizona — with a portal that shows you the quote, the technician, the readings
+              across Arizona, with a portal that shows you the quote, the technician, the readings
               and the report. No four-hour windows. No mystery invoices.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link href="/request-quote" className="btn-primary">
                 Request a free quote
-                <IconArrowRight className="h-4 w-4" />
               </Link>
               <a href={`tel:${COMPANY.emergencyPhone.replace(/\D/g, '')}`} className="btn-ghost">
                 <IconPhone className="h-4 w-4 text-ember" />
@@ -133,49 +131,49 @@ export default function HomePage() {
             action={
               <Link href="/services" className="btn-ghost btn-sm">
                 All services
-                <IconArrowRight className="h-3.5 w-3.5" />
               </Link>
             }
           >
-            Everything from a ninety-minute tune-up to a full commercial rooftop changeout — priced
+            Everything from a ninety-minute tune-up to a full commercial rooftop changeout. Priced
             as line items, documented with readings, and recorded permanently in your account.
           </SectionHeading>
         </Reveal>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((s, i) => (
-            <Reveal key={s.slug} delay={i * 55}>
-              <ServiceCard service={s} index={i} />
-            </Reveal>
-          ))}
+        <Reveal>
+          <div className="mt-12">
+            <ServiceRegister services={SERVICES} />
+          </div>
+        </Reveal>
 
-          {/* emergency call-out tile completes the 8-cell grid */}
-          <Reveal delay={SERVICES.length * 55}>
-            <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-card border border-ember/25 bg-ember/[0.05] p-6">
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-ember/15 blur-3xl"
-              />
-              <div className="relative">
-                <span className="grid h-11 w-11 place-items-center rounded-xl border border-ember/30 bg-ember/10 text-ember">
-                  <IconFlame className="h-5 w-5" />
+        {/* emergency band, set apart from the register rather than sitting inside it */}
+        <Reveal delay={80}>
+          <div className="relative mt-4 flex flex-col gap-5 overflow-hidden rounded-[18px] border border-ember/30 bg-ember/[0.05] px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-ember/12 blur-3xl"
+            />
+            <div className="relative">
+              <p className="flex items-center gap-2.5 text-2xs font-semibold uppercase tracking-[0.18em] text-ember">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-pulse-ring rounded-full bg-ember" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-ember" />
                 </span>
-                <h3 className="mt-5 text-[17px] font-semibold">System down right now?</h3>
-                <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">
-                  Live dispatch, 24 hours a day. Total failures in extreme heat and any gas or
-                  electrical concern jump the queue.
-                </p>
-              </div>
-              <a
-                href={`tel:${COMPANY.emergencyPhone.replace(/\D/g, '')}`}
-                className="btn-ember btn-sm relative mt-6 w-full"
-              >
-                <IconPhone className="h-3.5 w-3.5" />
-                <span className="tnum">{COMPANY.emergencyPhone}</span>
-              </a>
+                Live dispatch, 24 hours a day
+              </p>
+              <h3 className="mt-3 text-[21px] font-semibold leading-tight">System down right now?</h3>
+              <p className="mt-2 max-w-lg text-[13.5px] leading-relaxed text-muted">
+                Total failures in extreme heat, and any gas or electrical concern, jump the queue.
+              </p>
             </div>
-          </Reveal>
-        </div>
+            <a
+              href={`tel:${COMPANY.emergencyPhone.replace(/\D/g, '')}`}
+              className="btn-ember relative shrink-0"
+            >
+              <IconPhone className="h-4 w-4" />
+              <span className="tnum">{COMPANY.emergencyPhone}</span>
+            </a>
+          </div>
+        </Reveal>
       </section>
 
       {/* ================================= process ================================ */}
@@ -183,7 +181,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-5">
           <Reveal>
             <SectionHeading index="02" eyebrow="How it works" title="Four steps, no phone tag">
-              The whole job runs through one thread — request, quote, visit, report. You can watch
+              The whole job runs through one thread, request, quote, visit, report. You can watch
               every stage of it without calling anyone.
             </SectionHeading>
           </Reveal>
@@ -290,7 +288,6 @@ export default function HomePage() {
             action={
               <Link href="/testimonials" className="btn-ghost btn-sm">
                 Read more
-                <IconArrowRight className="h-3.5 w-3.5" />
               </Link>
             }
           />
@@ -316,7 +313,7 @@ export default function HomePage() {
                 </Link>
               }
             >
-              Response windows are measured, not promised — these are the medians we actually hit
+              Response windows are measured, not promised. These are the medians we actually hit
               over the last twelve months.
             </SectionHeading>
           </Reveal>
@@ -372,7 +369,6 @@ export default function HomePage() {
               <div className="mt-9 flex flex-wrap justify-center gap-3">
                 <Link href="/request-quote" className="btn-primary">
                   Request a quote
-                  <IconArrowRight className="h-4 w-4" />
                 </Link>
                 <Link href="/track" className="btn-ghost">
                   Track an existing request

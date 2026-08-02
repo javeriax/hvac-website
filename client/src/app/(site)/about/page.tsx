@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Reveal, SectionHeading } from '@/components/brand';
 import { PageHero } from '@/components/site/PageHero';
 import {
-  IconArrowRight,
   IconGauge,
   IconShield,
   IconSpark,
@@ -15,14 +14,14 @@ import { COMPANY, STATS, WHY_US } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'ArcticAir HVAC Solutions — 35 licensed staff serving the Phoenix metro since 2009 with measured diagnostics, transparent pricing and a customer portal that keeps every record.',
+    'ArcticAir HVAC Solutions, 35 licensed staff serving the Phoenix metro since 2009 with measured diagnostics, transparent pricing and a customer portal that keeps every record.',
 };
 
 const TIMELINE = [
   {
     year: '2009',
     title: 'One van, one licence',
-    body: 'Founded in a Phoenix garage servicing residential split systems. The founding principle — measure before you quote — has not changed since.',
+    body: 'Founded in a Phoenix garage servicing residential split systems. The founding principle, measure before you quote, has not changed since.',
   },
   {
     year: '2014',
@@ -102,14 +101,14 @@ export default function AboutPage() {
               </p>
               <p>
                 That failure is not unusual. Most HVAC complaints trace back to one of two
-                shortcuts — a system sized by looking at whatever was on the pad before it, or a
+                shortcuts, a system sized by looking at whatever was on the pad before it, or a
                 repair quoted without a meter ever coming out of the bag. Both are fast. Both are
                 wrong often enough to matter.
               </p>
               <p>
                 So we built the company around the slower version. Every replacement quote includes
                 a Manual J load calculation and a static pressure reading. Every diagnostic hands
-                you the actual measurements — amp draw, superheat, subcooling — not just a verdict.
+                you the actual measurements, amp draw, superheat, subcooling, not just a verdict.
                 It takes longer. It also means our callback rate sits under three percent.
               </p>
               <p>
@@ -183,24 +182,32 @@ export default function AboutPage() {
         <div className="relative mt-12">
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-line md:left-1/2" />
           <div className="space-y-8">
-            {TIMELINE.map((t, i) => (
-              <Reveal key={t.year} delay={i * 60}>
-                <div
-                  className={`relative pl-8 md:grid md:grid-cols-2 md:gap-10 md:pl-0 ${
-                    i % 2 ? 'md:[&>*:first-child]:col-start-2' : ''
-                  }`}
-                >
-                  <span
-                    className={`absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 border-frost bg-page md:left-1/2 md:-translate-x-1/2`}
-                  />
-                  <div className={i % 2 ? 'md:pl-10' : 'md:pr-10 md:text-right'}>
-                    <p className="tnum text-[13px] font-semibold text-frost">{t.year}</p>
-                    <h3 className="mt-1.5 text-[16px] font-semibold">{t.title}</h3>
-                    <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{t.body}</p>
+            {TIMELINE.map((t, i) => {
+              const onLeft = i % 2 === 0;
+              return (
+                <Reveal key={t.year} delay={i * 60}>
+                  <div className="relative pl-8 md:grid md:grid-cols-2 md:gap-12 md:pl-0">
+                    {/* The dot is absolutely positioned, so it stays out of the grid
+                        and always sits on the centre line no matter which side the
+                        text is on. */}
+                    <span className="absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 border-frost bg-page md:left-1/2 md:-translate-x-1/2" />
+
+                    {/* Alternate sides by naming the column explicitly. */}
+                    <div
+                      className={
+                        onLeft
+                          ? 'md:col-start-1 md:pr-12 md:text-right'
+                          : 'md:col-start-2 md:pl-12'
+                      }
+                    >
+                      <p className="tnum text-[13px] font-semibold text-frost">{t.year}</p>
+                      <h3 className="mt-1.5 text-[16px] font-semibold">{t.title}</h3>
+                      <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{t.body}</p>
+                    </div>
                   </div>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -230,7 +237,6 @@ export default function AboutPage() {
               <div className="mt-2 flex flex-wrap justify-center gap-3">
                 <Link href="/request-quote" className="btn-primary">
                   Request a quote
-                  <IconArrowRight className="h-4 w-4" />
                 </Link>
                 <Link href="/testimonials" className="btn-ghost">
                   Read customer stories

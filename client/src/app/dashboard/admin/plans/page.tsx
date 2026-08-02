@@ -111,7 +111,7 @@ export default function AdminPlansPage() {
         label="Features"
         rows={7}
         defaultValue={(plan?.features ?? []).join('\n')}
-        hint="One per line — these appear on the pricing page."
+        hint="One per line, these appear on the pricing page."
       />
 
       <div className="grid gap-4 sm:grid-cols-2">

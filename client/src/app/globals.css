@@ -7,35 +7,38 @@
    Dark is the default surface (a control room), light is "Frost".
    ==========================================================================*/
 
+/* Dark is a neutral graphite room, not a blue one. Greys stay near-achromatic
+   so the only saturated things on screen are the two temperature accents. */
 :root,
 :root[data-theme='dark'] {
-  --c-page: 6 10 17;
-  --c-surface: 12 18 28;
-  --c-raised: 18 26 39;
-  --c-sunken: 4 7 12;
-  --c-ink: 230 238 248;
-  --c-muted: 138 155 176;
-  --c-faint: 90 105 126;
-  --c-line: 40 54 74;
+  --c-page: 10 10 11;
+  --c-surface: 21 21 23;
+  --c-raised: 32 32 35;
+  --c-sunken: 15 15 16;
+  --c-ink: 240 240 242;
+  --c-muted: 158 158 165;
+  --c-faint: 112 112 119;
+  --c-line: 45 45 49;
 
-  --c-frost: 95 227 216;
-  --c-frost-soft: 24 62 66;
-  --c-frost-deep: 20 178 168;
+  --c-frost: 96 205 232;
+  --c-frost-soft: 22 48 58;
+  --c-frost-deep: 46 156 194;
 
-  --c-ember: 255 122 69;
-  --c-ember-soft: 68 38 26;
-  --c-ember-deep: 224 88 38;
+  --c-ember: 255 126 71;
+  --c-ember-soft: 58 34 24;
+  --c-ember-deep: 226 92 42;
 
-  --c-ok: 74 214 152;
-  --c-warn: 245 191 84;
-  --c-danger: 255 107 107;
-  --c-info: 122 162 255;
+  --c-ok: 92 204 148;
+  --c-warn: 232 186 96;
+  --c-danger: 240 113 103;
+  --c-info: 128 168 240;
 
-  --grid-line: rgb(255 255 255 / 0.028);
-  --grain-opacity: 0.16;
+  --grid-line: rgb(255 255 255 / 0.022);
+  --grain-opacity: 0.13;
   color-scheme: dark;
 }
 
+/* Light keeps its cool blue-grey cast. Only the dark theme is achromatic. */
 :root[data-theme='light'] {
   --c-page: 241 244 248;
   --c-surface: 255 255 255;

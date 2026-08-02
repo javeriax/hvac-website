@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
-/** Short, human-readable, non-ambiguous code — e.g. SR-7K4M2Q. */
+/** Short, human-readable, non-ambiguous code, e.g. SR-7K4M2Q. */
 export function trackingCode(prefix: string, length = 6): string {
   let out = '';
   for (let i = 0; i < length; i += 1) {

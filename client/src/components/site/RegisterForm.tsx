@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { AuthShell } from './AuthShell';
-import { IconArrowRight } from '@/components/icons';
 import { Alert, Button, SelectField, TextField } from '@/components/ui';
 import { ApiError } from '@/lib/api';
 import { HOME_FOR, useAuth } from '@/lib/auth';
@@ -64,7 +63,7 @@ export function RegisterForm() {
   return (
     <AuthShell
       title="Keep every reading, photo and invoice."
-      lede="A customer account turns each visit into a permanent record — useful when you sell the house, dispute a warranty claim, or just want to know what was actually done."
+      lede="A customer account turns each visit into a permanent record, useful when you sell the house, dispute a warranty claim, or just want to know what was actually done."
       points={[
         'Full service history with technician reports',
         'Approve quotations without phone tag',
@@ -192,7 +191,6 @@ export function RegisterForm() {
 
         <Button type="submit" loading={busy} className="w-full">
           {busy ? 'Creating account' : 'Create account'}
-          {!busy && <IconArrowRight className="h-4 w-4" />}
         </Button>
       </form>
     </AuthShell>

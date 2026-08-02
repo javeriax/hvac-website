@@ -7,7 +7,6 @@ import { AssignTechnicianModal } from '@/components/dashboard/AssignTechnicianMo
 import { StatTile } from '@/components/charts';
 import {
   IconAlert,
-  IconArrowRight,
   IconCalendar,
   IconClock,
   IconFlame,
@@ -15,8 +14,8 @@ import {
   IconTruck,
   IconUser,
   IconUsers,
-  SERVICE_ICONS,
-} from '@/components/icons';
+  } from '@/components/icons';
+import { ServiceMark } from '@/components/ServiceMark';
 import { Avatar, Button, Dot, EmptyState, Pill, Skeleton } from '@/components/ui';
 import { addressLine, cx, fmtTime, serviceLabel, titleCase, toneFor } from '@/lib/format';
 import { useApi } from '@/lib/useApi';
@@ -126,16 +125,20 @@ export default function DispatcherBoardPage() {
                 <Link
                   key={r._id}
                   href={`/dashboard/dispatcher/requests/${r._id}`}
-                  className="rounded-xl border border-ember/25 bg-surface p-4 transition-colors hover:border-ember/50"
+                  className="min-w-0 rounded-xl border border-ember/25 bg-surface p-4 transition-colors hover:border-ember/50"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="truncate text-[13.5px] font-semibold">{r.title}</p>
+                  {/* min-w-0 on the flex children, otherwise truncate does nothing
+                      and long titles push the card wider than the phone screen */}
+                  <div className="flex min-w-0 items-start justify-between gap-2">
+                    <p className="min-w-0 truncate text-[13.5px] font-semibold">{r.title}</p>
                     <Pill tone={toneFor('request', r.status)}>{titleCase(r.status)}</Pill>
                   </div>
-                  <p className="tnum mt-1 text-2xs text-muted">{r.trackingCode}</p>
-                  <p className="mt-2 flex items-center gap-1.5 text-2xs text-muted">
-                    <IconMapPin className="h-3 w-3 text-faint" />
-                    {r.address.city} · {r.contact.name}
+                  <p className="tnum mt-1 truncate text-2xs text-muted">{r.trackingCode}</p>
+                  <p className="mt-2 flex min-w-0 items-center gap-1.5 text-2xs text-muted">
+                    <IconMapPin className="h-3 w-3 shrink-0 text-faint" />
+                    <span className="truncate">
+                      {r.address.city} · {r.contact.name}
+                    </span>
                   </p>
                 </Link>
               ))}
@@ -157,7 +160,6 @@ export default function DispatcherBoardPage() {
           ) : (
             <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {unassigned.map((job) => {
-                const Icon = SERVICE_ICONS[job.serviceType] ?? IconTruck;
                 const customer = job.customer as User;
                 return (
                   <div
@@ -165,9 +167,7 @@ export default function DispatcherBoardPage() {
                     className="rounded-xl border border-danger/25 bg-danger/[0.03] p-4"
                   >
                     <div className="flex items-start gap-3">
-                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-danger/25 bg-danger/10 text-danger">
-                        <Icon className="h-4 w-4" />
-                      </span>
+                      <ServiceMark type={job.serviceType} size={36} />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-[13.5px] font-semibold">{job.title}</p>
                         <p className="tnum text-2xs text-muted">
@@ -193,7 +193,6 @@ export default function DispatcherBoardPage() {
 
                     <Button size="sm" className="mt-3 w-full" onClick={() => setAssigning(job)}>
                       Assign technician
-                      <IconArrowRight className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 );

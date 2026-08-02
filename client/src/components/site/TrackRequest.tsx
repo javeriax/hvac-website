@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import {
-  IconArrowRight,
   IconCheck,
   IconClock,
   IconMapPin,
@@ -75,7 +74,7 @@ export function TrackRequest() {
     }
   }, []);
 
-  // Deep link support — /track?code=SR-XXXXXX runs the lookup on load.
+  // Deep link support, /track?code=SR-XXXXXX runs the lookup on load.
   useEffect(() => {
     const initial = params.get('code');
     if (initial) {
@@ -112,7 +111,6 @@ export function TrackRequest() {
           </div>
           <Button type="submit" loading={loading} className="sm:w-auto">
             {loading ? 'Looking up' : 'Track request'}
-            {!loading && <IconArrowRight className="h-4 w-4" />}
           </Button>
         </div>
         <p className="mt-2.5 text-xs text-faint">

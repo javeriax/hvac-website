@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { DataTable, TablePanel } from './DataTable';
-import { IconClipboard, IconSearch, SERVICE_ICONS } from '@/components/icons';
+import { IconClipboard, IconSearch } from '@/components/icons';
+import { ServiceMark } from '@/components/ServiceMark';
 import { Avatar, Pill, Tabs } from '@/components/ui';
 import { fmtDate, relative, serviceLabel, titleCase, toneFor } from '@/lib/format';
 import { useApi } from '@/lib/useApi';
@@ -35,7 +36,7 @@ function bucket(rows: ServiceRequest[], key: string) {
   }
 }
 
-/** Shared request queue — dispatcher and admin both work from this view. */
+/** Shared request queue, dispatcher and admin both work from this view. */
 export function RequestsWorkspace({
   detailBase = '/dashboard/dispatcher/requests',
   initialTab = 'triage',
@@ -99,18 +100,9 @@ export function RequestsWorkspace({
             key: 'request',
             header: 'Request',
             render: (r) => {
-              const Icon = SERVICE_ICONS[r.serviceType] ?? IconClipboard;
               return (
                 <div className="flex items-center gap-3">
-                  <span
-                    className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg border ${
-                      r.priority === 'emergency'
-                        ? 'border-danger/30 bg-danger/10 text-danger'
-                        : 'border-line bg-sunken text-frost'
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </span>
+                  <ServiceMark type={r.serviceType} size={36} />
                   <div className="min-w-0">
                     <p className="truncate text-[13.5px] font-medium">{r.title}</p>
                     <p className="tnum text-2xs text-muted">

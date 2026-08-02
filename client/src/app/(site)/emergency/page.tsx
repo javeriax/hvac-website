@@ -4,7 +4,6 @@ import { Reveal } from '@/components/brand';
 import { PageHero } from '@/components/site/PageHero';
 import {
   IconAlert,
-  IconArrowRight,
   IconCheck,
   IconClock,
   IconFlame,
@@ -17,7 +16,7 @@ import { COMPANY } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Emergency Service',
   description:
-    '24/7 emergency HVAC response across the Phoenix metro — total system failure, gas odours, electrical faults, water damage and commercial refrigeration.',
+    '24/7 emergency HVAC response across the Phoenix metro, total system failure, gas odours, electrical faults, water damage and commercial refrigeration.',
 };
 
 const TRIAGE = [
@@ -25,7 +24,7 @@ const TRIAGE = [
     level: 'Call us immediately',
     tone: 'ember',
     items: [
-      'Any smell of gas — leave the building first, then call',
+      'Any smell of gas, leave the building first, then call',
       'Burning smell, smoke or scorching around the unit',
       'Sparking, tripping breakers or scorched wiring',
       'No cooling with an infant, elderly or medically vulnerable resident indoors',
@@ -56,10 +55,10 @@ const TRIAGE = [
 ];
 
 const STEPS = [
-  { icon: IconPhone, title: 'You call', body: 'A dispatcher answers — not a queue, not a voicemail box. We triage severity in the first thirty seconds.' },
+  { icon: IconPhone, title: 'You call', body: 'A dispatcher answers, not a queue, not a voicemail box. We triage severity in the first thirty seconds.' },
   { icon: IconTruck, title: 'We dispatch', body: 'The nearest qualified technician is assigned and you receive their name, certifications and live ETA.' },
   { icon: IconShield, title: 'We stabilise', body: 'Safety first: gas isolated, power made safe, water stopped. Then we diagnose the actual fault.' },
-  { icon: IconCheck, title: 'You approve', body: 'Emergency work still gets a priced approval before parts go in — unless it is a safety isolation, which we do immediately.' },
+  { icon: IconCheck, title: 'You approve', body: 'Emergency work still gets a priced approval before parts go in, unless it is a safety isolation, which we do immediately.' },
 ];
 
 export default function EmergencyPage() {
@@ -217,13 +216,12 @@ export default function EmergencyPage() {
           <div className="mt-10 flex flex-col items-center gap-4 rounded-card border border-line bg-surface p-8 text-center">
             <h2 className="text-[22px] font-semibold">Not an emergency right now?</h2>
             <p className="max-w-lg text-[14px] leading-relaxed text-muted">
-              A maintenance plan is the cheapest way to make sure the next one never happens — and
+              A maintenance plan is the cheapest way to make sure the next one never happens, and
               if it does, you jump the queue.
             </p>
             <div className="mt-1 flex flex-wrap justify-center gap-3">
               <Link href="/maintenance-plans" className="btn-primary btn-sm">
                 Compare plans
-                <IconArrowRight className="h-3.5 w-3.5" />
               </Link>
               <Link href="/request-quote" className="btn-ghost btn-sm">
                 Book a service visit

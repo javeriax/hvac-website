@@ -40,7 +40,7 @@ export const PLANS = [
   {
     slug: 'comfort',
     name: 'Comfort Plus',
-    tagline: 'Our most popular plan — faster response, deeper coverage.',
+    tagline: 'Our most popular plan, faster response, deeper coverage.',
     priceMonthly: 34,
     priceAnnual: 359,
     visitsPerYear: 3,
@@ -169,35 +169,35 @@ export const REQUEST_TEMPLATES: Record<
       title: 'AC blowing warm air upstairs',
       description:
         'The upstairs unit runs constantly but only pushes warm air. Downstairs is fine. Started two days ago during the heatwave.',
-      labor: ['Diagnostic and refrigerant service — 2.5h', 2.5, 95],
+      labor: ['Diagnostic and refrigerant service, 2.5h', 2.5, 95],
       parts: [['Dual Run Capacitor 45/5 MFD 440V', 1, 42], ['R-410A Refrigerant (per lb)', 3, 38]],
     },
     {
       title: 'Outdoor unit making grinding noise',
       description:
         'Loud metallic grinding from the condenser whenever the system kicks on. Unit is about 8 years old and has never been serviced.',
-      labor: ['Condenser fan motor replacement — 3h', 3, 95],
+      labor: ['Condenser fan motor replacement, 3h', 3, 95],
       parts: [['ECM Blower Motor 1/2 HP', 1, 385]],
     },
     {
       title: 'System short cycling every few minutes',
       description:
         'Thermostat reads correctly but the compressor kicks on and off every 3-4 minutes. Energy bill has doubled this month.',
-      labor: ['Diagnostics and TXV replacement — 4h', 4, 95],
+      labor: ['Diagnostics and TXV replacement, 4h', 4, 95],
       parts: [['Thermal Expansion Valve (3 Ton)', 1, 118], ['R-410A Refrigerant (per lb)', 4, 38]],
     },
     {
       title: 'Furnace not igniting',
       description:
         'Furnace clicks but never lights. We can smell a faint gas odour near the unit for a second before it shuts off.',
-      labor: ['Emergency furnace diagnostic and igniter swap — 2h', 2, 135],
+      labor: ['Emergency furnace diagnostic and igniter swap, 2h', 2, 135],
       parts: [['Hot Surface Igniter (Universal)', 1, 56]],
     },
     {
       title: 'Water pooling around indoor unit',
       description:
         'Found standing water on the closet floor beneath the air handler this morning. Drywall is starting to stain.',
-      labor: ['Condensate line clearing and pan service — 1.5h', 1.5, 95],
+      labor: ['Condensate line clearing and pan service, 1.5h', 1.5, 95],
       parts: [],
     },
   ],
@@ -206,28 +206,28 @@ export const REQUEST_TEMPLATES: Record<
       title: 'Replace 14-year-old AC system',
       description:
         'Existing 3-ton unit is failing repeatedly and the compressor is original. Looking for a high-efficiency replacement with a rebate.',
-      labor: ['Full system changeout — 8h crew of two', 8, 105],
+      labor: ['Full system changeout, 8h crew of two', 8, 105],
       parts: [['Carrier Infinity 16 SEER Condenser (3 Ton)', 1, 3450], ['Carrier FE4 Fan Coil Air Handler', 1, 1580]],
     },
     {
       title: 'New mini split for converted garage',
       description:
-        'Garage converted to a home office. Needs its own zone — roughly 400 sq ft, west-facing with heavy afternoon sun.',
-      labor: ['Mini split installation and line set — 6h', 6, 105],
+        'Garage converted to a home office. Needs its own zone, roughly 400 sq ft, west-facing with heavy afternoon sun.',
+      labor: ['Mini split installation and line set, 6h', 6, 105],
       parts: [['Mitsubishi Hyper-Heat Mini Split (18k BTU)', 1, 3260]],
     },
     {
-      title: 'Rooftop unit replacement — retail suite',
+      title: 'Rooftop unit replacement, retail suite',
       description:
         'One of three RTUs has failed. Needs replacement with minimal downtime; the suite operates 7 days a week.',
-      labor: ['Commercial RTU changeout with crane — 10h', 10, 125],
+      labor: ['Commercial RTU changeout with crane, 10h', 10, 125],
       parts: [['Trane XV18 Variable Speed Condenser (4 Ton)', 1, 4880]],
     },
     {
       title: 'Heat pump upgrade for whole home',
       description:
         'Moving off gas heat. Want a variable-speed heat pump sized for a 2,100 sq ft single storey.',
-      labor: ['Heat pump installation and commissioning — 9h', 9, 105],
+      labor: ['Heat pump installation and commissioning, 9h', 9, 105],
       parts: [['Daikin Aurora Heat Pump (24k BTU)', 1, 3890]],
     },
   ],
@@ -235,19 +235,19 @@ export const REQUEST_TEMPLATES: Record<
     {
       title: 'Annual pre-summer tune-up',
       description: 'Standard seasonal service before temperatures climb. Two systems on the property.',
-      labor: ['Precision tune-up — 1.5h', 1.5, 85],
+      labor: ['Precision tune-up, 1.5h', 1.5, 85],
       parts: [['MERV 11 Pleated Filter 16x25x1 (6 pack)', 1, 38]],
     },
     {
       title: 'Fall heating system check',
       description: 'Furnace has not run since March. Would like it checked before the first cold night.',
-      labor: ['Heating system inspection — 1.5h', 1.5, 85],
+      labor: ['Heating system inspection, 1.5h', 1.5, 85],
       parts: [],
     },
     {
       title: 'Quarterly commercial service visit',
       description: 'Scheduled quarterly visit across all rooftop units per the maintenance agreement.',
-      labor: ['Commercial multi-unit service — 5h', 5, 110],
+      labor: ['Commercial multi-unit service, 5h', 5, 110],
       parts: [['MERV 16 Media Filter 20x25x5', 4, 74]],
     },
   ],
@@ -256,14 +256,14 @@ export const REQUEST_TEMPLATES: Record<
       title: 'Pre-purchase HVAC inspection',
       description:
         'Under contract on a 1998 build. Need a written condition report on the HVAC system for the inspection period.',
-      labor: ['Full system inspection and written report — 2h', 2, 90],
+      labor: ['Full system inspection and written report, 2h', 2, 90],
       parts: [],
     },
     {
       title: 'Airflow imbalance assessment',
       description:
         'Two bedrooms never cool properly while the living room is freezing. Suspect a duct sizing or damper issue.',
-      labor: ['Static pressure and airflow assessment — 3h', 3, 90],
+      labor: ['Static pressure and airflow assessment, 3h', 3, 90],
       parts: [],
     },
   ],
@@ -272,7 +272,7 @@ export const REQUEST_TEMPLATES: Record<
       title: 'Whole-home duct cleaning',
       description:
         'Heavy dust on the registers and allergy symptoms since we moved in. Ducts have likely never been cleaned.',
-      labor: ['Full duct system cleaning and sanitising — 5h', 5, 88],
+      labor: ['Full duct system cleaning and sanitising, 5h', 5, 88],
       parts: [['R-8 Insulated Flex Duct (25 ft run)', 2, 96]],
     },
   ],
@@ -280,36 +280,36 @@ export const REQUEST_TEMPLATES: Record<
     {
       title: 'Smart thermostat installation',
       description: 'Want to replace two old dial thermostats with smart units we can control while travelling.',
-      labor: ['Smart thermostat install and configuration — 1.5h', 1.5, 85],
+      labor: ['Smart thermostat install and configuration, 1.5h', 1.5, 85],
       parts: [['Ecobee Smart Thermostat Premium', 2, 249]],
     },
     {
       title: 'Thermostat reading wrong temperature',
       description: 'Thermostat shows 74 but a separate thermometer next to it reads 79. System never satisfies.',
-      labor: ['Thermostat diagnostics and replacement — 1h', 1, 85],
+      labor: ['Thermostat diagnostics and replacement, 1h', 1, 85],
       parts: [['Honeywell T6 Pro Programmable', 1, 129]],
     },
   ],
   emergency: [
     {
-      title: 'No cooling — 112°F outside, elderly resident',
+      title: 'No cooling, 112°F outside, elderly resident',
       description:
         'System completely dead. My mother is 84 and the house is already at 89 degrees. Need someone today.',
-      labor: ['After-hours emergency call-out — 3h', 3, 165],
+      labor: ['After-hours emergency call-out, 3h', 3, 165],
       parts: [['Contactor 2-Pole 30A 24V', 1, 38], ['Dual Run Capacitor 45/5 MFD 440V', 1, 42]],
     },
     {
-      title: 'Burning smell from vents — system shut off',
+      title: 'Burning smell from vents, system shut off',
       description:
         'Strong burning smell through the whole house. We killed the breaker. Need an emergency safety inspection.',
-      labor: ['Emergency safety inspection and motor replacement — 4h', 4, 165],
+      labor: ['Emergency safety inspection and motor replacement, 4h', 4, 165],
       parts: [['ECM Blower Motor 1/2 HP', 1, 385]],
     },
     {
-      title: 'Walk-in cooler down — commercial kitchen',
+      title: 'Walk-in cooler down, commercial kitchen',
       description:
         'Walk-in is at 51°F and climbing. We have several thousand dollars of stock at risk. Need immediate response.',
-      labor: ['Emergency commercial refrigeration call — 5h', 5, 185],
+      labor: ['Emergency commercial refrigeration call, 5h', 5, 185],
       parts: [['R-410A Refrigerant (per lb)', 6, 38], ['Thermal Expansion Valve (3 Ton)', 1, 118]],
     },
   ],
@@ -322,11 +322,11 @@ export const TESTIMONIALS = [
   { author: 'Marcus Wynn', role: 'Homeowner', city: 'Mesa', rating: 5, serviceType: 'installation', quote: 'Got three quotes for a full system replacement. ArcticAir was not the cheapest, but they were the only ones who measured the ductwork before pricing it. Worth every dollar.' },
   { author: 'Priya Kaur', role: 'Property Manager', city: 'Chandler', rating: 5, serviceType: 'maintenance', quote: 'Managing 42 units used to mean 42 phone calls. Now everything routes through one dashboard and I approve quotes from my phone.' },
   { author: 'Terrence Boyd', role: 'Homeowner', city: 'Gilbert', rating: 4, serviceType: 'duct-cleaning', quote: 'Duct cleaning made an immediate difference to the dust in the house. Tomas walked me through before-and-after photos of every run.' },
-  { author: 'Ingrid Solberg', role: 'Homeowner', city: 'Glendale', rating: 5, serviceType: 'thermostat', quote: 'Small job — two thermostats — but they treated it like a big one. Set up the app, showed me the scheduling, and did not leave until I understood it.' },
+  { author: 'Ingrid Solberg', role: 'Homeowner', city: 'Glendale', rating: 5, serviceType: 'thermostat', quote: 'Small job, two thermostats, but they treated it like a big one. Set up the app, showed me the scheduling, and did not leave until I understood it.' },
   { author: 'Owen Castellanos', role: 'Restaurant Owner', city: 'Phoenix', rating: 5, serviceType: 'emergency', quote: 'Walk-in cooler failed on a Saturday night with a full kitchen. They saved roughly four thousand dollars of stock. I do not use anyone else now.' },
   { author: 'Fatima Al-Rashid', role: 'Homeowner', city: 'Peoria', rating: 5, serviceType: 'maintenance', quote: 'Third year on the Comfort Plus plan. Two tune-ups a year, no surprise bills, and the same technician every time so he knows the system.' },
   { author: 'Silas Thornton', role: 'Homeowner', city: 'Scottsdale', rating: 4, serviceType: 'inspection', quote: 'Bought a 1998 house and needed an honest assessment. They told me the furnace had four good years left rather than trying to sell me a new one.' },
 ];
 
 export const FIRST_NAMES_NOTE =
-  'All demo accounts share the password ArcticAir#2026 — see README for the credential table.';
+  'All demo accounts share the password ArcticAir#2026, see README for the credential table.';

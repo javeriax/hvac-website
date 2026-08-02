@@ -3,12 +3,12 @@ import Link from 'next/link';
 import { Reveal } from '@/components/brand';
 import { PageHero } from '@/components/site/PageHero';
 import { PlanGrid } from '@/components/site/PlanGrid';
-import { IconArrowRight, IconCheck, IconClock, IconShield, IconX } from '@/components/icons';
+import { IconCheck, IconClock, IconShield, IconX } from '@/components/icons';
 
 export const metadata: Metadata = {
   title: 'Maintenance Plans',
   description:
-    'Annual HVAC maintenance agreements — scheduled tune-ups, repair discounts, priority scheduling and guaranteed response windows for homes and businesses.',
+    'Annual HVAC maintenance agreements, scheduled tune-ups, repair discounts, priority scheduling and guaranteed response windows for homes and businesses.',
 };
 
 const COMPARISON = [
@@ -39,7 +39,7 @@ export default function MaintenancePlansPage() {
         index="02"
         eyebrow="Maintenance Plans"
         title="Pay for the tune-up, not the emergency"
-        lede="Two thirds of the emergency calls we run in July trace back to something a spring tune-up would have caught — a drifting capacitor, a fouled coil, a blocked drain. A plan is simply the cheaper half of that equation."
+        lede="Two thirds of the emergency calls we run in July trace back to something a spring tune-up would have caught, a drifting capacitor, a fouled coil, a blocked drain. A plan is simply the cheaper half of that equation."
         aside={
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
             <div className="rounded-card border border-line bg-surface px-5 py-4">
@@ -130,13 +130,12 @@ export default function MaintenancePlansPage() {
         <Reveal>
           <h2 className="text-[26px] font-semibold">Ready to enrol?</h2>
           <p className="mt-4 text-[14.5px] leading-relaxed text-muted">
-            Create an account and pick your plan from the dashboard — enrolment takes about a
+            Create an account and pick your plan from the dashboard, enrolment takes about a
             minute, and your first visit is scheduled automatically based on the season.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link href="/register" className="btn-primary">
               Create an account
-              <IconArrowRight className="h-4 w-4" />
             </Link>
             <Link href="/dashboard/customer/contracts" className="btn-ghost">
               Already a customer? Enrol here

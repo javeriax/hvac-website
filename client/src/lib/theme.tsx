@@ -9,8 +9,10 @@ const ThemeContext = createContext<{ theme: Theme; toggle: () => void } | null>(
 const STORAGE_KEY = 'serviceflow.theme';
 
 /**
- * Inlined in <head> so the correct theme is painted before first paint.
- * Without this the page flashes dark before switching to a stored light theme.
+ * Runs in <head> before React boots.
+ *
+ * It sets data-theme straight away. Without it the page paints dark first and
+ * then snaps to light for anyone who chose light mode, which looks broken.
  */
 export const themeScript = `
 (function(){
@@ -39,7 +41,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       try {
         localStorage.setItem(STORAGE_KEY, next);
       } catch {
-        /* private browsing — theme just won't persist */
+        /* private browsing, theme just won't persist */
       }
       return next;
     });

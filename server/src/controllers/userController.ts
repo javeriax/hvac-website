@@ -8,6 +8,7 @@ import { Invoice } from '../models/Invoice';
 import { ServiceRequest } from '../models/ServiceRequest';
 import { MaintenanceContract } from '../models/MaintenanceContract';
 
+// User list with role, status and search filters.
 export const listUsers = asyncHandler(async (req: Request, res: Response) => {
   const filter: FilterQuery<UserDoc> = {};
   if (req.query.role) filter.role = req.query.role;
@@ -22,7 +23,7 @@ export const listUsers = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, count: users.length, data: users });
 });
 
-/** Technician roster with today's load — powers the dispatcher board. */
+// Technician roster with each one's job count for today, used by the dispatch board.
 export const listTechnicians = asyncHandler(async (_req: Request, res: Response) => {
   const technicians = await User.find({ role: 'technician', isActive: true }).sort({ name: 1 });
 
@@ -50,6 +51,7 @@ export const listTechnicians = asyncHandler(async (_req: Request, res: Response)
   });
 });
 
+// One user. For customers this also returns their full history and lifetime value.
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (!user) throw ApiError.notFound('User not found');
@@ -87,7 +89,7 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
   return res.json({ success: true, data: { user } });
 });
 
-/** Admin provisioning for staff accounts (technicians, dispatchers, admins). */
+// Admin creating any account, including staff.
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password, phone, role, technician, customer } = req.body;
 
@@ -115,6 +117,7 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
   res.status(201).json({ success: true, data: user });
 });
 
+// Admin editing a user. Sub-documents merge, so a partial update will not wipe fields.
 export const updateUser = asyncHandler(async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (!user) throw ApiError.notFound('User not found');
@@ -145,7 +148,7 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: user });
 });
 
-/** Technicians flip their own availability from the dashboard header. */
+// Availability change. Pass "me" as the id to update yourself.
 export const setTechnicianStatus = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user!;
   const targetId = req.params.id === 'me' ? user.id : req.params.id;
@@ -161,7 +164,7 @@ export const setTechnicianStatus = asyncHandler(async (req: Request, res: Respon
   res.json({ success: true, data: tech });
 });
 
-/** Soft delete — accounts are deactivated so their history stays intact. */
+// Soft delete. Deactivates rather than removing, so past jobs keep their references.
 export const deactivateUser = asyncHandler(async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (!user) throw ApiError.notFound('User not found');

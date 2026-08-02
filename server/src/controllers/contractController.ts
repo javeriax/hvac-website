@@ -17,11 +17,13 @@ function buildVisitSchedule(start: Date, months: number, visits: number) {
   });
 }
 
+// The public plan catalogue shown on the pricing page.
 export const listPlans = asyncHandler(async (_req: Request, res: Response) => {
   const plans = await MaintenancePlan.find({ isActive: true }).sort({ sortOrder: 1 });
   res.json({ success: true, data: plans });
 });
 
+// Admin creating or editing a maintenance plan.
 export const upsertPlan = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   const plan = id
@@ -32,6 +34,8 @@ export const upsertPlan = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: plan });
 });
 
+// Enrols a customer on a plan and spreads their visits across the year.
+// One live contract per customer.
 export const createContract = asyncHandler(async (req: Request, res: Response) => {
   const { plan: planId, customer, billingCycle = 'annual', startDate, autoRenew = true } = req.body;
 
@@ -77,13 +81,14 @@ export const createContract = asyncHandler(async (req: Request, res: Response) =
   await notifyRole(['admin'], {
     type: 'contract_renewal',
     title: 'New maintenance contract',
-    message: `${contract.contractNumber} — ${plan.name} ($${contract.amount}).`,
+    message: `${contract.contractNumber}, ${plan.name} ($${contract.amount}).`,
     link: '/dashboard/admin/contracts',
   });
 
   res.status(201).json({ success: true, data: contract });
 });
 
+// Lists contracts. Supports an expiringWithin filter for the renewal queue.
 export const listContracts = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user!;
   const filter: FilterQuery<MaintenanceContractDoc> = {};
@@ -105,6 +110,7 @@ export const listContracts = asyncHandler(async (req: Request, res: Response) =>
   res.json({ success: true, count: contracts.length, data: contracts });
 });
 
+// One contract with its visit schedule.
 export const getContract = asyncHandler(async (req: Request, res: Response) => {
   const contract = await MaintenanceContract.findById(req.params.id)
     .populate('customer', 'name email phone customer')
@@ -119,6 +125,7 @@ export const getContract = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: contract });
 });
 
+// Renews for another year, starting where the old term ends so there is no gap.
 export const renewContract = asyncHandler(async (req: Request, res: Response) => {
   const previous = await MaintenanceContract.findById(req.params.id);
   if (!previous) throw ApiError.notFound('Contract not found');
@@ -130,7 +137,7 @@ export const renewContract = asyncHandler(async (req: Request, res: Response) =>
   const plan = await MaintenancePlan.findById(req.body.plan ?? previous.plan);
   if (!plan) throw ApiError.notFound('Maintenance plan not found');
 
-  // A renewal picks up where the old term ends — no gap in coverage.
+  // A renewal picks up where the old term ends, no gap in coverage.
   const start = previous.endDate > new Date() ? previous.endDate : new Date();
   const end = new Date(start);
   end.setFullYear(end.getFullYear() + 1);
@@ -167,6 +174,7 @@ export const renewContract = asyncHandler(async (req: Request, res: Response) =>
   res.status(201).json({ success: true, data: renewal });
 });
 
+// Cancels a contract and switches auto-renew off.
 export const cancelContract = asyncHandler(async (req: Request, res: Response) => {
   const contract = await MaintenanceContract.findById(req.params.id);
   if (!contract) throw ApiError.notFound('Contract not found');
@@ -182,6 +190,7 @@ export const cancelContract = asyncHandler(async (req: Request, res: Response) =
   res.json({ success: true, data: contract });
 });
 
+// Customer flipping auto-renew on or off.
 export const toggleAutoRenew = asyncHandler(async (req: Request, res: Response) => {
   const contract = await MaintenanceContract.findById(req.params.id);
   if (!contract) throw ApiError.notFound('Contract not found');
@@ -195,8 +204,8 @@ export const toggleAutoRenew = asyncHandler(async (req: Request, res: Response) 
 });
 
 /**
- * Sweeps contracts inside the renewal window and pushes a reminder for each
- * one that has not been chased yet (Module 6 — "send renewal reminders").
+ * Finds contracts expiring within 60 days and notifies each customer.
+ * Anyone already reminded in the last 30 days is skipped so nobody gets spammed.
  */
 export const sendRenewalReminders = asyncHandler(async (_req: Request, res: Response) => {
   const horizon = new Date(Date.now() + 60 * 86400000);

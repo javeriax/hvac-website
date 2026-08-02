@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { DashboardShell } from '@/components/dashboard/DashboardShell';
 import { StatTile } from '@/components/charts';
 import {
-  IconArrowRight,
   IconCalendar,
   IconCheck,
   IconClipboard,
@@ -16,8 +15,8 @@ import {
   IconShield,
   IconTruck,
   IconUser,
-  SERVICE_ICONS,
-} from '@/components/icons';
+  } from '@/components/icons';
+import { ServiceMark } from '@/components/ServiceMark';
 import { Avatar, EmptyState, LinkButton, Meter, Pill, Skeleton } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
 import {
@@ -50,7 +49,7 @@ export default function CustomerOverviewPage() {
       title={`Good to see you, ${user?.name?.split(' ')[0] ?? ''}`}
       subtitle="Everything about your systems, in one place"
       actions={
-        <LinkButton href="/request-quote" size="sm" icon={<IconArrowRight className="h-3.5 w-3.5" />}>
+        <LinkButton href="/request-quote" size="sm">
           New request
         </LinkButton>
       }
@@ -214,16 +213,13 @@ export default function CustomerOverviewPage() {
               ) : (
                 <ul className="divide-y divide-line">
                   {requests.slice(0, 5).map((r) => {
-                    const Icon = SERVICE_ICONS[r.serviceType] ?? IconClipboard;
                     return (
                       <li key={r._id}>
                         <Link
                           href={`/dashboard/customer/requests/${r._id}`}
                           className="-mx-2 flex items-center gap-3 rounded-lg px-2 py-3 transition-colors hover:bg-raised"
                         >
-                          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line bg-sunken text-frost">
-                            <Icon className="h-3.5 w-3.5" />
-                          </span>
+                          <ServiceMark type={r.serviceType} size={32} />
                           <span className="min-w-0 flex-1">
                             <span className="block truncate text-[13.5px] font-medium">{r.title}</span>
                             <span className="tnum block text-2xs text-muted">
@@ -305,7 +301,7 @@ export default function CustomerOverviewPage() {
                     </LinkButton>
                   }
                 >
-                  Two tune-ups a year plus a standing repair discount — usually cheaper than one
+                  Two tune-ups a year plus a standing repair discount, usually cheaper than one
                   emergency call.
                 </EmptyState>
               )}

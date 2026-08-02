@@ -194,7 +194,7 @@ export default function DispatcherRequestDetailPage() {
           </div>
 
           {!customer && (
-            <Alert tone="warn" title="Guest request — no linked account">
+            <Alert tone="warn" title="Guest request, no linked account">
               This request came in without a customer account, so it cannot be quoted yet. Ask the
               customer to register with {request.contact.email}, or create the account from the admin
               customer list.
@@ -419,7 +419,7 @@ export default function DispatcherRequestDetailPage() {
             placeholder="Leave unassigned"
             options={(technicians ?? []).map((t) => ({
               value: t._id,
-              label: `${t.name} — ${titleCase(t.technician?.status)} · ${t.jobsToday ?? 0} today`,
+              label: `${t.name} · ${titleCase(t.technician?.status)} · ${t.jobsToday ?? 0} today`,
             }))}
           />
 

@@ -24,9 +24,11 @@ function toLocalInput(date: string | Date) {
 }
 
 /**
- * Assignment dialog used from the dispatch board. Surfaces each technician's
- * skills and current load so the dispatcher is not picking blind, and lets the
- * server enforce the actual double-booking check.
+ * Assign-a-technician dialog, opened from the dispatch board.
+ *
+ * Lists each technician with their skills, rating and how many jobs they already
+ * have today so the dispatcher is not picking blind. The ordering is only a
+ * hint. The real double-booking check runs on the server and can still reject.
  */
 export function AssignTechnicianModal({
   job,

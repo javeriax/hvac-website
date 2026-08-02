@@ -5,7 +5,6 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { trackingCode } from '../utils/sequence';
 import { filesToImages } from '../middleware/upload';
 import { ServiceRequest, ServiceRequestDoc } from '../models/ServiceRequest';
-import { User } from '../models/User';
 import { notify, notifyRole } from '../services/notify';
 
 /** Body arrives as multipart when photos are attached, so nested objects come through as JSON strings. */
@@ -19,6 +18,8 @@ function parseMaybeJson<T>(value: unknown, fallback: T): T {
   }
 }
 
+// Takes a new service request from either a guest or a signed-in customer.
+// Multipart, because photos come with it. Emergencies get bumped to top priority automatically.
 export const createServiceRequest = asyncHandler(async (req: Request, res: Response) => {
   const body = req.body ?? {};
   const address = parseMaybeJson(body.address, null as null | Record<string, string>);
@@ -80,13 +81,14 @@ export const createServiceRequest = asyncHandler(async (req: Request, res: Respo
   await notifyRole(['dispatcher', 'admin'], {
     type: priority === 'emergency' ? 'system' : 'request_confirmed',
     title: priority === 'emergency' ? 'EMERGENCY request received' : 'New service request',
-    message: `${contact.name} — ${request.title} (${request.trackingCode})`,
+    message: `${contact.name}, ${request.title} (${request.trackingCode})`,
     link: '/dashboard/dispatcher',
   });
 
   res.status(201).json({ success: true, data: request });
 });
 
+// Lists requests. Customers only ever see their own; staff see everything.
 export const listServiceRequests = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user!;
   const filter: FilterQuery<ServiceRequestDoc> = {};
@@ -112,6 +114,7 @@ export const listServiceRequests = asyncHandler(async (req: Request, res: Respon
   res.json({ success: true, count: requests.length, data: requests });
 });
 
+// One request with its quote and job attached. Customers can only open their own.
 export const getServiceRequest = asyncHandler(async (req: Request, res: Response) => {
   const request = await ServiceRequest.findById(req.params.id)
     .populate('customer', 'name email phone avatarUrl customer')
@@ -131,7 +134,8 @@ export const getServiceRequest = asyncHandler(async (req: Request, res: Response
   res.json({ success: true, data: request });
 });
 
-/** Public status lookup — no auth, keyed on the short tracking code. */
+// Public status lookup by tracking code. No login.
+// Deliberately returns a trimmed object: no address, no contact details, no invoice.
 export const trackServiceRequest = asyncHandler(async (req: Request, res: Response) => {
   const code = String(req.params.code).trim().toUpperCase();
   const request = await ServiceRequest.findOne({ trackingCode: code })
@@ -159,6 +163,7 @@ export const trackServiceRequest = asyncHandler(async (req: Request, res: Respon
   });
 });
 
+// Staff move a request along and leave a note. The customer gets told.
 export const updateRequestStatus = asyncHandler(async (req: Request, res: Response) => {
   const { status, note } = req.body;
   const request = await ServiceRequest.findById(req.params.id);
@@ -181,6 +186,7 @@ export const updateRequestStatus = asyncHandler(async (req: Request, res: Respon
   res.json({ success: true, data: request });
 });
 
+// Cancel a request. Blocked once a technician has actually started work.
 export const cancelServiceRequest = asyncHandler(async (req: Request, res: Response) => {
   const request = await ServiceRequest.findById(req.params.id);
   if (!request) throw ApiError.notFound('Service request not found');
@@ -188,7 +194,7 @@ export const cancelServiceRequest = asyncHandler(async (req: Request, res: Respo
   const user = req.user!;
   if (user.role === 'customer' && String(request.customer) !== user.id) throw ApiError.forbidden();
   if (['completed', 'in_progress'].includes(request.status)) {
-    throw ApiError.badRequest('Work has already started — please call dispatch to cancel');
+    throw ApiError.badRequest('Work has already started, please call dispatch to cancel');
   }
 
   request.status = 'cancelled';
@@ -206,27 +212,6 @@ export const cancelServiceRequest = asyncHandler(async (req: Request, res: Respo
     message: `${request.trackingCode} was cancelled.`,
     link: '/dashboard/dispatcher',
   });
-
-  res.json({ success: true, data: request });
-});
-
-/** Links a guest-submitted request to the signed-in customer account. */
-export const claimServiceRequest = asyncHandler(async (req: Request, res: Response) => {
-  const user = req.user!;
-  if (user.role !== 'customer') throw ApiError.forbidden('Only customers can claim a request');
-
-  const request = await ServiceRequest.findOne({
-    trackingCode: String(req.body.trackingCode).trim().toUpperCase(),
-  });
-  if (!request) throw ApiError.notFound('No request found for that tracking code');
-  if (request.customer) throw ApiError.conflict('That request is already linked to an account');
-  if (request.contact.email.toLowerCase() !== user.email.toLowerCase()) {
-    throw ApiError.forbidden('That request was submitted with a different email address');
-  }
-
-  request.customer = user._id;
-  await request.save();
-  await User.findByIdAndUpdate(user._id, {});
 
   res.json({ success: true, data: request });
 });

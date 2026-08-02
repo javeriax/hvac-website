@@ -32,7 +32,7 @@ export async function protect(req: Request, _res: Response, next: NextFunction) 
     next();
   } catch (err) {
     if (err instanceof ApiError) return next(err);
-    return next(ApiError.unauthorized('Session expired — please sign in again'));
+    return next(ApiError.unauthorized('Session expired, please sign in again'));
   }
 }
 
@@ -45,7 +45,7 @@ export async function optionalAuth(req: Request, _res: Response, next: NextFunct
     const user = await User.findById(payload.sub);
     if (user?.isActive) req.user = user;
   } catch {
-    /* anonymous request — carry on */
+    /* anonymous request, carry on */
   }
   return next();
 }

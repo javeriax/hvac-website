@@ -22,8 +22,10 @@ function monthsBack(n: number) {
 }
 
 /**
- * Module 8 — the single aggregate the admin analytics screen consumes.
- * Everything is computed server-side so the client stays a thin renderer.
+ * Everything the admin analytics page needs, in one response (module 8).
+ *
+ * All the aggregation runs here rather than in the browser, so the numbers on
+ * screen and the numbers in any future export cannot disagree.
  */
 export const getOverview = asyncHandler(async (_req: Request, res: Response) => {
   const today = startOfDay();
@@ -237,7 +239,7 @@ export const getOverview = asyncHandler(async (_req: Request, res: Response) => 
   });
 });
 
-/** Lighter payload for the dispatcher's day view. */
+// Small summary for the dispatcher: today's load, unassigned work, open emergencies.
 export const getDispatchSummary = asyncHandler(async (_req: Request, res: Response) => {
   const today = startOfDay();
   const tomorrow = new Date(today.getTime() + 86400000);
@@ -263,7 +265,7 @@ export const getDispatchSummary = asyncHandler(async (_req: Request, res: Respon
   });
 });
 
-/** Customer-facing mini-summary for the portal home. */
+// Numbers for the customer home screen: open requests, next visit, balance, plan.
 export const getCustomerSummary = asyncHandler(async (req: Request, res: Response) => {
   const customerId = req.user!._id;
 
@@ -301,7 +303,7 @@ export const getCustomerSummary = asyncHandler(async (req: Request, res: Respons
   });
 });
 
-/** Technician's own performance card. */
+// The technician's own stats for today and this week.
 export const getTechnicianSummary = asyncHandler(async (req: Request, res: Response) => {
   const techId = req.user!._id;
   const today = startOfDay();

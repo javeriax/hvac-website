@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHero } from '@/components/site/PageHero';
 import { FaqList } from '@/components/site/FaqList';
-import { IconArrowRight, IconPhone } from '@/components/icons';
+import { IconPhone } from '@/components/icons';
 import { COMPANY, FAQS } from '@/lib/site';
 
 export const metadata: Metadata = {
@@ -51,7 +51,6 @@ export default function FaqPage() {
           </p>
           <Link href="/request-quote" className="btn-primary mt-6">
             Request a quote
-            <IconArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>

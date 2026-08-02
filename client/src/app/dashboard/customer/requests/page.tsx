@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { DashboardShell } from '@/components/dashboard/DashboardShell';
 import { DataTable, TablePanel } from '@/components/dashboard/DataTable';
-import { IconArrowRight, IconClipboard, IconSearch, SERVICE_ICONS } from '@/components/icons';
+import { IconClipboard, IconSearch } from '@/components/icons';
+import { ServiceMark } from '@/components/ServiceMark';
 import { LinkButton, Pill, Tabs } from '@/components/ui';
 import { fmtDate, relative, serviceLabel, titleCase, toneFor } from '@/lib/format';
 import { useApi } from '@/lib/useApi';
@@ -60,7 +61,7 @@ export default function CustomerRequestsPage() {
       title="Service requests"
       subtitle="Every job you have raised with ArcticAir"
       actions={
-        <LinkButton href="/request-quote" size="sm" icon={<IconArrowRight className="h-3.5 w-3.5" />}>
+        <LinkButton href="/request-quote" size="sm">
           New request
         </LinkButton>
       }
@@ -100,12 +101,9 @@ export default function CustomerRequestsPage() {
               key: 'request',
               header: 'Request',
               render: (r) => {
-                const Icon = SERVICE_ICONS[r.serviceType] ?? IconClipboard;
                 return (
                   <div className="flex items-center gap-3">
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-line bg-sunken text-frost">
-                      <Icon className="h-4 w-4" />
-                    </span>
+                    <ServiceMark type={r.serviceType} size={36} />
                     <div className="min-w-0">
                       <p className="truncate text-[13.5px] font-medium">{r.title}</p>
                       <p className="tnum text-2xs text-muted">{r.trackingCode}</p>

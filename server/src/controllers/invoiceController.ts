@@ -9,6 +9,8 @@ import { Job } from '../models/Job';
 import { Quotation } from '../models/Quotation';
 import { notify } from '../services/notify';
 
+// Creates an invoice, normally from a completed job.
+// Line items come from the accepted quote, falling back to the technician report.
 export const createInvoice = asyncHandler(async (req: Request, res: Response) => {
   const { job: jobId, customer, lineItems, taxRate, discountAmount, dueDate, notes, contract } = req.body;
 
@@ -33,7 +35,7 @@ export const createInvoice = asyncHandler(async (req: Request, res: Response) =>
       resolvedItems = [
         {
           kind: 'labor',
-          description: `${job.title} — ${job.report.laborHours}h on site`,
+          description: `${job.title}, ${job.report.laborHours}h on site`,
           quantity: job.report.laborHours,
           unitPrice: 95,
         },
@@ -70,6 +72,7 @@ export const createInvoice = asyncHandler(async (req: Request, res: Response) =>
   res.status(201).json({ success: true, data: invoice });
 });
 
+// Lists invoices. Customers never see drafts.
 export const listInvoices = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user!;
   const filter: FilterQuery<InvoiceDoc> = {};
@@ -90,6 +93,7 @@ export const listInvoices = asyncHandler(async (req: Request, res: Response) => 
   res.json({ success: true, count: invoices.length, data: invoices });
 });
 
+// One invoice plus its payment history.
 export const getInvoice = asyncHandler(async (req: Request, res: Response) => {
   const invoice = await Invoice.findById(req.params.id)
     .populate('customer', 'name email phone customer')
@@ -109,6 +113,7 @@ export const getInvoice = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: { invoice, payments } });
 });
 
+// Edit an invoice before it is paid.
 export const updateInvoice = asyncHandler(async (req: Request, res: Response) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw ApiError.notFound('Invoice not found');
@@ -122,6 +127,7 @@ export const updateInvoice = asyncHandler(async (req: Request, res: Response) =>
   res.json({ success: true, data: invoice });
 });
 
+// Issues the invoice to the customer.
 export const sendInvoice = asyncHandler(async (req: Request, res: Response) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw ApiError.notFound('Invoice not found');
@@ -142,6 +148,7 @@ export const sendInvoice = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: invoice });
 });
 
+// Voids an invoice. Only allowed while no money has been taken against it.
 export const voidInvoice = asyncHandler(async (req: Request, res: Response) => {
   const invoice = await Invoice.findById(req.params.id);
   if (!invoice) throw ApiError.notFound('Invoice not found');
@@ -152,7 +159,7 @@ export const voidInvoice = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: invoice });
 });
 
-/** Records a payment and rolls the invoice balance/status forward. */
+// Records a payment and rolls the balance and status forward. Cannot overpay.
 export const recordPayment = asyncHandler(async (req: Request, res: Response) => {
   const { amount, method, reference, paidAt } = req.body;
   const invoice = await Invoice.findById(req.params.id);
@@ -184,13 +191,14 @@ export const recordPayment = asyncHandler(async (req: Request, res: Response) =>
     user: invoice.customer,
     type: 'payment_received',
     title: 'Payment received',
-    message: `Thank you — $${value.toFixed(2)} applied to ${invoice.invoiceNumber}.`,
+    message: `Thank you, $${value.toFixed(2)} applied to ${invoice.invoiceNumber}.`,
     link: `/dashboard/customer/invoices/${invoice.id}`,
   });
 
   res.status(201).json({ success: true, data: { payment, invoice } });
 });
 
+// Payment ledger, scoped by role.
 export const listPayments = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user!;
   const filter: Record<string, unknown> = {};

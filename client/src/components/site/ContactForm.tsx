@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
-import { IconArrowRight, IconCheck, IconSpark } from '@/components/icons';
+import { IconCheck, IconSpark } from '@/components/icons';
 import { Alert, Button, SelectField, TextArea, TextField } from '@/components/ui';
 import { ApiError, api } from '@/lib/api';
 
@@ -50,13 +50,12 @@ export function ContactForm() {
         </span>
         <h2 className="mt-6 text-[21px] font-semibold">Message received</h2>
         <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-muted">
-          It is already in our dispatch queue. Expect a reply within one business day — sooner if
+          It is already in our dispatch queue. Expect a reply within one business day, sooner if
           you marked it urgent.
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <Link href="/request-quote" className="btn-primary btn-sm">
             Request a quote
-            <IconArrowRight className="h-3.5 w-3.5" />
           </Link>
           <button onClick={() => setSent(false)} className="btn-ghost btn-sm">
             Send another
@@ -116,7 +115,6 @@ export function ContactForm() {
         </p>
         <Button type="submit" loading={sending}>
           {sending ? 'Sending' : 'Send message'}
-          {!sending && <IconArrowRight className="h-4 w-4" />}
         </Button>
       </div>
     </form>

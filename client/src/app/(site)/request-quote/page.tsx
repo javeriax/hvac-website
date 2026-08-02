@@ -8,7 +8,7 @@ import { IconCheck, IconClock, IconShield } from '@/components/icons';
 export const metadata: Metadata = {
   title: 'Request a Quote',
   description:
-    'Describe your HVAC issue, attach photos and pick a preferred window. Receive a line-item quotation you can approve or decline online — no account required.',
+    'Describe your HVAC issue, attach photos and pick a preferred window. Receive a line-item quotation you can approve or decline online, no account required.',
 };
 
 const ASSURANCES = [

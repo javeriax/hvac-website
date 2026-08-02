@@ -43,7 +43,7 @@ export function Footer() {
             <Logo size={32} />
             <p className="mt-5 max-w-xs text-[13.5px] leading-relaxed text-muted">
               Installation, emergency repair and preventive maintenance for homes and businesses
-              across the Phoenix metro — running on {COMPANY.product}, our own service management
+              across the Phoenix metro, running on {COMPANY.product}, our own service management
               platform.
             </p>
 

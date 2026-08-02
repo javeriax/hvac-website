@@ -1,18 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Logo } from '@/components/brand';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { IconArrowRight, IconMenu, IconPhone, IconX } from '@/components/icons';
-import { HOME_FOR, useAuth } from '@/lib/auth';
+import { UserMenu } from '@/components/site/UserMenu';
+import { IconMenu, IconPhone, IconX } from '@/components/icons';
+import { HOME_FOR, SETTINGS_FOR, useAuth } from '@/lib/auth';
 import { cx } from '@/lib/format';
 import { COMPANY, SITE_NAV } from '@/lib/site';
 
 export function Navbar() {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -27,7 +29,7 @@ export function Navbar() {
 
   return (
     <>
-      {/* Emergency strip — the one thing a panicking visitor needs. */}
+      {/* Emergency strip, the one thing a panicking visitor needs. */}
       <div className="relative z-50 border-b border-line bg-sunken">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-1.5 text-2xs">
           <p className="flex items-center gap-2 text-muted">
@@ -91,10 +93,7 @@ export function Navbar() {
             </Link>
 
             {user ? (
-              <Link href={HOME_FOR[user.role]} className="btn-ghost btn-sm">
-                Dashboard
-                <IconArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              <UserMenu />
             ) : (
               <Link href="/login" className="btn-ghost btn-sm hidden sm:inline-flex">
                 Sign in
@@ -134,11 +133,47 @@ export function Navbar() {
               >
                 Track a request
               </Link>
+              {/* Signed-in users get their account links here instead of a
+                  pointless "Sign in" button. */}
+              {user && (
+                <>
+                  <span className="mt-2 px-3 text-2xs uppercase tracking-[0.14em] text-faint">
+                    {user.name}
+                  </span>
+                  <Link
+                    href={HOME_FOR[user.role]}
+                    className="rounded-lg px-3 py-2.5 text-sm text-muted transition-colors hover:bg-raised hover:text-ink"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href={SETTINGS_FOR[user.role]}
+                    className="rounded-lg px-3 py-2.5 text-sm text-muted transition-colors hover:bg-raised hover:text-ink"
+                  >
+                    Settings
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      router.push('/');
+                    }}
+                    className="rounded-lg px-3 py-2.5 text-left text-sm text-muted transition-colors hover:bg-raised hover:text-danger"
+                  >
+                    Log out
+                  </button>
+                </>
+              )}
+
               <div className="mt-2 grid grid-cols-2 gap-2">
-                <Link href="/login" className="btn-ghost btn-sm">
-                  Sign in
-                </Link>
-                <Link href="/request-quote" className="btn-primary btn-sm">
+                {!user && (
+                  <Link href="/login" className="btn-ghost btn-sm">
+                    Sign in
+                  </Link>
+                )}
+                <Link
+                  href="/request-quote"
+                  className={user ? 'btn-primary btn-sm col-span-2' : 'btn-primary btn-sm'}
+                >
                   Request a quote
                 </Link>
               </div>

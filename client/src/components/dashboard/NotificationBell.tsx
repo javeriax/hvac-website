@@ -32,7 +32,7 @@ const ICONS: Record<string, (p: { className?: string }) => JSX.Element> = {
   system: IconFlame,
 };
 
-/** Module 9 — the notification centre. Polls every 45s while the tab is open. */
+/** Module 9, the notification centre. Polls every 45s while the tab is open. */
 export function NotificationBell() {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<Notification[]>([]);
@@ -48,7 +48,7 @@ export function NotificationBell() {
       setItems(data.notifications);
       setUnread(data.unreadCount);
     } catch {
-      /* silent — the bell must never break the page */
+      /* silent, the bell must never break the page */
     }
   }, []);
 

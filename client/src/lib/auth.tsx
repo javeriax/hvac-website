@@ -43,6 +43,14 @@ export const HOME_FOR: Record<Role, string> = {
   admin: '/dashboard/admin',
 };
 
+/** Each role's own account page, used by the header menu. */
+export const SETTINGS_FOR: Record<Role, string> = {
+  customer: '/dashboard/customer/profile',
+  technician: '/dashboard/technician/profile',
+  dispatcher: '/dashboard/dispatcher/profile',
+  admin: '/dashboard/admin/profile',
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -101,9 +109,10 @@ export function useAuth() {
 }
 
 /**
- * Client-side route guard for dashboards. Redirects anonymous visitors to the
- * login screen and sends signed-in users to their own dashboard if they land on
- * someone else's.
+ * Route guard for the dashboard pages.
+ *
+ * Not signed in, send them to login and remember where they were going.
+ * Signed in but on someone else's dashboard, bounce them to their own.
  */
 export function useRequireRole(...roles: Role[]) {
   const { user, loading } = useAuth();

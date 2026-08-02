@@ -7,7 +7,7 @@ import { COMPANY, SERVICE_AREAS } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Reach ArcticAir HVAC Solutions — office line, 24/7 emergency dispatch, email and our Phoenix headquarters.',
+    'Reach ArcticAir HVAC Solutions, office line, 24/7 emergency dispatch, email and our Phoenix headquarters.',
 };
 
 const CHANNELS = [
@@ -48,7 +48,7 @@ export default function ContactPage() {
         index="06"
         eyebrow="Contact"
         title="Talk to a person, not a form robot"
-        lede="Every message lands in the same dashboard our dispatchers work from. If it is urgent, call the emergency line — that one always reaches a human."
+        lede="Every message lands in the same dashboard our dispatchers work from. If it is urgent, call the emergency line, that one always reaches a human."
       />
 
       <section className="mx-auto max-w-7xl px-5 py-16 lg:py-20">

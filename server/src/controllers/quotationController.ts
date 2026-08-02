@@ -7,6 +7,7 @@ import { Quotation, QuotationDoc } from '../models/Quotation';
 import { ServiceRequest } from '../models/ServiceRequest';
 import { notify, notifyRole } from '../services/notify';
 
+// Builds a quote against a request. Totals are worked out in the model, not taken from the client.
 export const createQuotation = asyncHandler(async (req: Request, res: Response) => {
   const { serviceRequest: requestId, lineItems, taxRate, discountType, discountValue, notes, validUntil } =
     req.body;
@@ -15,7 +16,7 @@ export const createQuotation = asyncHandler(async (req: Request, res: Response) 
   if (!request) throw ApiError.notFound('Service request not found');
   if (!request.customer) {
     throw ApiError.badRequest(
-      'This request has no linked customer account — create the customer first',
+      'This request has no linked customer account, create the customer first',
     );
   }
   if (!Array.isArray(lineItems) || lineItems.length === 0) {
@@ -46,6 +47,7 @@ export const createQuotation = asyncHandler(async (req: Request, res: Response) 
   res.status(201).json({ success: true, data: quotation });
 });
 
+// Lists quotes. Customers never see drafts.
 export const listQuotations = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user!;
   const filter: FilterQuery<QuotationDoc> = {};
@@ -67,6 +69,7 @@ export const listQuotations = asyncHandler(async (req: Request, res: Response) =
   res.json({ success: true, count: quotations.length, data: quotations });
 });
 
+// One quote. Customers can only open their own, and drafts 404 for them.
 export const getQuotation = asyncHandler(async (req: Request, res: Response) => {
   const quotation = await Quotation.findById(req.params.id)
     .populate('customer', 'name email phone customer')
@@ -83,6 +86,7 @@ export const getQuotation = asyncHandler(async (req: Request, res: Response) => 
   res.json({ success: true, data: quotation });
 });
 
+// Edit a quote. Refused once the customer has accepted or rejected it.
 export const updateQuotation = asyncHandler(async (req: Request, res: Response) => {
   const quotation = await Quotation.findById(req.params.id);
   if (!quotation) throw ApiError.notFound('Quotation not found');
@@ -99,7 +103,7 @@ export const updateQuotation = asyncHandler(async (req: Request, res: Response) 
   res.json({ success: true, data: quotation });
 });
 
-/** Moves a draft to `sent` and notifies the customer. */
+// Draft -> sent. Notifies the customer and moves the request to "quoted".
 export const sendQuotation = asyncHandler(async (req: Request, res: Response) => {
   const quotation = await Quotation.findById(req.params.id);
   if (!quotation) throw ApiError.notFound('Quotation not found');
@@ -125,7 +129,7 @@ export const sendQuotation = asyncHandler(async (req: Request, res: Response) =>
   res.json({ success: true, data: quotation });
 });
 
-/** Customer decision endpoint — accept or reject. */
+// The customer accepting or rejecting. Expired quotes are refused and marked expired.
 export const respondToQuotation = asyncHandler(async (req: Request, res: Response) => {
   const { decision, reason } = req.body;
   if (!['accept', 'reject'].includes(decision)) {
@@ -143,7 +147,7 @@ export const respondToQuotation = asyncHandler(async (req: Request, res: Respons
   if (quotation.validUntil.getTime() < Date.now()) {
     quotation.status = 'expired';
     await quotation.save();
-    throw ApiError.badRequest('This quotation has expired — please request a fresh estimate');
+    throw ApiError.badRequest('This quotation has expired, please request a fresh estimate');
   }
 
   quotation.status = decision === 'accept' ? 'accepted' : 'rejected';
@@ -167,7 +171,7 @@ export const respondToQuotation = asyncHandler(async (req: Request, res: Respons
     title: `Quotation ${quotation.quoteNumber} ${decision === 'accept' ? 'approved' : 'declined'}`,
     message:
       decision === 'accept'
-        ? `Approved for $${quotation.total.toFixed(2)} — schedule a technician.`
+        ? `Approved for $${quotation.total.toFixed(2)}, schedule a technician.`
         : `Declined${reason ? `: ${reason}` : ''}.`,
     link: '/dashboard/dispatcher',
   });
@@ -175,6 +179,7 @@ export const respondToQuotation = asyncHandler(async (req: Request, res: Respons
   res.json({ success: true, data: quotation });
 });
 
+// Deletes a draft. Anything already sent stays on the record.
 export const deleteQuotation = asyncHandler(async (req: Request, res: Response) => {
   const quotation = await Quotation.findById(req.params.id);
   if (!quotation) throw ApiError.notFound('Quotation not found');

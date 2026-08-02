@@ -1,9 +1,9 @@
 import { SVGProps } from 'react';
 
 /**
- * Hand-rolled icon set — 24px grid, 1.5 stroke, round caps.
- * Drawn in-house rather than pulled from a library so the visual language
- * (and the HVAC-specific glyphs) stay unique to ServiceFlow.
+ * Icons, drawn here rather than pulled from a library: 24px box, 1.5 stroke,
+ * round caps. Doing them by hand mostly paid off for the HVAC-specific ones
+ * (duct, airflow, thermostat) which no icon set has.
  */
 
 type IconProps = SVGProps<SVGSVGElement>;
@@ -273,7 +273,7 @@ export const IconExternal = (p: IconProps) => (
   <svg {...base(p)}><path d="M13.5 4.5H19.5v6M19.5 4.5 11 13" /><path d="M18 14.5v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2h4" /></svg>
 );
 
-/** Maps a service type to its glyph — used across cards, tables and dashboards. */
+/** Maps a service type to its glyph, used across cards, tables and dashboards. */
 export const SERVICE_ICONS: Record<string, (p: IconProps) => JSX.Element> = {
   installation: IconDuct,
   repair: IconWrench,

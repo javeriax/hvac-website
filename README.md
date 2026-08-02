@@ -1,85 +1,81 @@
-# ServiceFlow™ — HVAC Service Management System
+# ServiceFlow — HVAC Service Management System
 
-**Client:** ArcticAir HVAC Solutions · **Agency:** BranDive Media Solutions
-**Sprint:** Week 1, Project 3 — Full Stack Developer
+Built for the ArcticAir HVAC brief (BranDive Media Solutions, Week 1 Project 3).
 
-A centralised platform that takes an HVAC company off spreadsheets, WhatsApp threads and paper
-carbon copies. Customers raise requests and approve quotations online; dispatchers assign
-technicians without double-booking; technicians close jobs from the field with photos, a checklist
-and a captured signature; management watches revenue, contracts and technician performance from a
-single analytics screen.
+A web platform that replaces the spreadsheets, WhatsApp threads and paper job sheets a growing HVAC
+company runs on. Customers raise requests and approve quotes online, dispatchers assign technicians
+without double-booking, technicians close jobs from their phone with photos and a signature, and
+management sees revenue and performance on one screen.
 
 ---
 
-## Table of contents
+## Contents
 
 - [Tech stack](#tech-stack)
-- [Quick start](#quick-start)
-- [Demo accounts](#demo-accounts)
-- [Modules delivered](#modules-delivered)
-- [Design system](#design-system)
-- [Project structure](#project-structure)
-- [Database schema](#database-schema)
-- [API reference](#api-reference)
+- [How to run it](#how-to-run-it)
+- [Demo logins](#demo-logins)
+- [What is built](#what-is-built)
+- [Bonus tasks](#bonus-tasks)
+- [What is not done](#what-is-not-done)
+- [Decisions I made and why](#decisions-i-made-and-why)
+- [Testing](#testing)
 - [Deployment](#deployment)
-- [Bonus features](#bonus-features)
+- [Other docs](#other-docs)
 
 ---
 
 ## Tech stack
 
-| Layer | Choice |
-| --- | --- |
-| Frontend | Next.js 14 (App Router), React 18, TypeScript |
-| Styling | Tailwind CSS 3 with a custom CSS-variable theme layer |
-| Charts | Hand-written SVG (no charting library) |
-| Icons | Hand-drawn 24px icon set (no icon library) |
-| Backend | Node.js, Express 4, TypeScript |
-| Database | MongoDB Atlas via Mongoose 8 |
-| Auth | JWT (stateless), bcrypt password hashing, role-based access control |
-| File storage | Cloudinary (request photos, job before/after photos, signatures) |
-| Hosting target | Vercel (frontend) + Hostinger VPS (API) |
+This is the stack the brief asked for.
 
-Runtime dependencies are deliberately minimal — three on the client (`next`, `react`, `react-dom`)
-and nine on the server. Charts, icons, the modal system, toasts and the signature pad are all
-written for this project rather than pulled in.
+| Part | Used |
+| --- | --- |
+| Frontend | React 18 + Next.js 14 (App Router) + TypeScript |
+| Styling | Tailwind CSS |
+| Backend | Node.js + Express + TypeScript |
+| Database | MongoDB (Atlas) with Mongoose |
+| Auth | JWT with role-based access control |
+| File storage | Cloudinary |
+| Version control | Git + GitHub |
+| Hosting | Vercel (frontend), any Node host for the API |
+
+Charts and icons are written by hand as SVG rather than installed. The client has three runtime
+dependencies: `next`, `react`, `react-dom`.
 
 ---
 
-## Quick start
+## How to run it
 
-**Prerequisites:** Node.js 18+ and a MongoDB Atlas connection string.
+You need Node 18+ and a MongoDB connection string.
 
-```bash
-git clone <your-repo-url> serviceflow-hvac && cd serviceflow-hvac
-```
-
-**1. Configure the server**
+**1. Set up the server env**
 
 ```bash
 cp server/.env.example server/.env
 ```
 
-Fill in `MONGODB_URI`, `JWT_SECRET` and your Cloudinary keys.
+Fill in `MONGODB_URI`, `JWT_SECRET` and the Cloudinary keys.
 
-**2. Install dependencies**
+**2. Install**
 
 ```bash
-npm --prefix server install && npm --prefix client install
+npm --prefix server install
 ```
 
-**3. Seed the database**
+```bash
+npm --prefix client install
+```
+
+**3. Load the demo data**
 
 ```bash
 npm --prefix server run seed:reset
 ```
 
-This drops the database and rebuilds ~13 months of realistic operating history: 34 users, 126
-service requests, 116 quotations, 100 jobs, 91 invoices, 90 payments, 14 maintenance contracts and
-a full equipment catalogue. Use `npm run seed` (without `:reset`) to clear the ServiceFlow
-collections only, leaving anything else in the database untouched.
+This wipes the database and rebuilds 13 months of history: 34 users, ~126 requests, ~110 quotes,
+100 jobs, ~91 invoices, ~90 payments, 14 contracts and the equipment catalogue.
 
-**4. Run both services**
+**4. Start both, in two terminals**
 
 ```bash
 npm --prefix server run dev
@@ -89,260 +85,170 @@ npm --prefix server run dev
 npm --prefix client run dev
 ```
 
-- Website → <http://localhost:3000>
-- API → <http://localhost:5050/api/health>
+Site: http://localhost:3000 · API health check: http://localhost:5050/api/health
 
-> The API defaults to port **5050**. If you change it, update `NEXT_PUBLIC_API_URL` in
-> `client/.env.local` to match.
-
-### A note on `MONGODB_URI_FALLBACK`
-
-`mongodb+srv://` requires a DNS **SRV** lookup, which Node performs through c-ares rather than the
-OS resolver. On machines whose only configured nameservers are IPv6, that lookup fails even though
-ordinary hostname resolution works fine. `server/src/config/db.ts` catches that specific failure and
-retries with the plain replica-set seed list in `MONGODB_URI_FALLBACK`. Leave the variable empty if
-your machine resolves SRV records normally — it is only a safety net.
+**Note on ports.** The API runs on 5050, not 5000, because 5000 was already taken on the machine
+this was built on. If you change it, update `NEXT_PUBLIC_API_URL` in `client/.env.local` too, and add
+the new frontend origin to the CORS list in `server/src/app.ts`.
 
 ---
 
-## Demo accounts
+## Demo logins
 
-Every seeded account shares the password **`ArcticAir#2026`**. The sign-in screen lists these and
-fills them in on click.
+Every seeded account uses the password **`ArcticAir#2026`**. The login page lists them and fills
+them in when you click one.
 
-| Role | Email | What to look at |
-| --- | --- | --- |
-| Administrator | `admin@arcticair.com` | Analytics, invoices, contracts, customers, equipment, plans |
-| Dispatcher | `dispatch@arcticair.com` | Dispatch board, technician lanes, quotation builder |
-| Technician | `marcus@arcticair.com` | Today's route, job checklist, photos, signature capture |
-| Customer | `customer@arcticair.com` | Requests, quotation approval, invoices, maintenance plan |
-
-Other seeded technicians: `priya@`, `dmitri@`, `aaliyah@`, `tomas@`, `grace@arcticair.com`.
-Second dispatcher: `dispatch2@arcticair.com`.
-
-**Suggested walkthrough**
-
-1. Sign in as the **customer** → approve a pending quotation.
-2. Sign in as the **dispatcher** → the approved job appears; assign a technician from the board.
-3. Sign in as that **technician** → mark en route, tick the checklist, upload photos, submit the
-   report, capture a signature, complete the job.
-4. Sign in as the **admin** → generate an invoice from the completed job, issue it, record payment,
-   then watch the analytics move.
-
----
-
-## Modules delivered
-
-| # | Module | Where it lives |
-| --- | --- | --- |
-| 1 | Corporate website | `/`, `/services`, `/maintenance-plans`, `/service-areas`, `/about`, `/testimonials`, `/emergency`, `/faq`, `/contact` |
-| 2 | Service request management | `/request-quote` (4-step wizard with photo upload), `/track` (public tracking by code) |
-| 3 | Quotation management | Builder at `/dashboard/dispatcher/requests/[id]`; customer approval at `/dashboard/customer/quotations/[id]` |
-| 4 | Technician dashboard | `/dashboard/technician`, `/dashboard/technician/jobs/[id]`, `/schedule`, `/history` |
-| 5 | Dispatcher dashboard | `/dashboard/dispatcher` (lane timeline), `/schedule` (week calendar), `/requests`, `/technicians` |
-| 6 | Maintenance contracts | `/dashboard/admin/contracts` (renewal queue + reminders), `/dashboard/customer/contracts` (enrol, renew, auto-renew) |
-| 7 | Invoice & payment | `/dashboard/admin/invoices`, `/dashboard/customer/invoices` — printable documents, partial payments, balance tracking |
-| 8 | Analytics dashboard | `/dashboard/admin` — revenue trend, job donut, service mix, technician leaderboard, request funnel |
-| 9 | Notification system | Bell in every dashboard header; triggers fire from `server/src/services/notify.ts` |
-
-### Role capabilities
-
-| | Guest | Customer | Technician | Dispatcher | Admin |
-| --- | :-: | :-: | :-: | :-: | :-: |
-| Browse services, request a quote, track by code | ✓ | ✓ | | | |
-| Approve/decline quotations, pay invoices, manage plan | | ✓ | | | |
-| View assigned jobs, update status, upload photos, capture signature, submit reports | | | ✓ | | |
-| Assign technicians, schedule, manage the emergency queue | | | | ✓ | ✓ |
-| Build & send quotations | | | | ✓ | ✓ |
-| Generate invoices, record payments, configure plans & equipment, manage staff | | | | | ✓ |
-
----
-
-## Design system
-
-The brief asked for a professionally designed, modern service business interface. The direction here
-is a **precision instrument** aesthetic built on HVAC's own duality:
-
-- **Frost (cyan) ↔ Ember (orange)** — cooling and heating. These two colours carry all the meaning;
-  everything else is a neutral instrument surface.
-- **Tabular monospace numerics** everywhere data appears, so figures align and read as measurements.
-- **Hairline borders and a 56px lattice** behind the page, with a film-grain overlay.
-- **Status as a leading bar**, not a filled bubble — denser, and legible in both themes.
-- **A live thermostat dial** as the hero: draggable, keyboard-accessible, and it animates a
-  cool-down cycle on its own.
-- **Editorial section indices** (`01`, `02`, …) rather than centred marketing headings.
-
-Both themes are first-class. `data-theme` on `<html>` swaps a single block of CSS variables, and an
-inline script in `<head>` paints the stored theme before first render so there is no flash.
-
-Accessibility: focus-visible rings, `prefers-reduced-motion` honoured, ARIA roles on the dial and
-modals, semantic landmarks, and colour never used as the only signal.
-
----
-
-## Project structure
-
-```
-serviceflow-hvac/
-├── client/                            # Next.js 14 frontend
-│   └── src/
-│       ├── app/
-│       │   ├── (site)/                # Public website — inherits Navbar/Footer
-│       │   ├── dashboard/
-│       │   │   ├── customer/          # Requests, quotations, invoices, contracts, profile
-│       │   │   ├── technician/        # Today, job detail, schedule, history, profile
-│       │   │   ├── dispatcher/        # Board, calendar, requests, technicians, quotations
-│       │   │   └── admin/             # Analytics, invoices, contracts, customers, equipment…
-│       │   ├── globals.css            # Theme tokens + component layer
-│       │   └── layout.tsx             # Fonts, theme script, providers
-│       ├── components/
-│       │   ├── brand.tsx              # Logo, Grain, ThermostatDial, SectionHeading, Reveal
-│       │   ├── charts.tsx             # AreaChart, BarChart, DonutChart, Sparkline, StatTile
-│       │   ├── icons.tsx              # Hand-drawn icon set
-│       │   ├── ui.tsx                 # Button, Card, fields, Modal, Pill, toasts, Tabs, Meter
-│       │   ├── site/                  # Navbar, Footer, forms, service cards, plan grid
-│       │   └── dashboard/             # Shell, DataTable, workspaces, builders, SignaturePad
-│       └── lib/                       # api, auth, theme, format, types, site content, useApi
-├── server/                            # Express + TypeScript API
-│   └── src/
-│       ├── config/                    # env, db (with SRV fallback), cloudinary
-│       ├── models/                    # 12 Mongoose models
-│       ├── controllers/               # auth, requests, quotations, jobs, invoices, contracts…
-│       ├── routes/                    # One router per resource, mounted in routes/index.ts
-│       ├── middleware/                # protect / requireRole, error handler, Cloudinary upload
-│       ├── services/notify.ts         # Central notification trigger (Module 9)
-│       ├── utils/                     # ApiError, asyncHandler, jwt, document numbering
-│       └── seed/                      # Deterministic demo dataset
-└── docs/                              # ER diagram, system flow, database schema, API reference
-```
-
----
-
-## Database schema
-
-Twelve collections. Full field-by-field detail in [`docs/DATABASE.md`](docs/DATABASE.md); the entity
-relationship diagram is in [`docs/ER-DIAGRAM.md`](docs/ER-DIAGRAM.md).
-
-| Collection | Purpose |
+| Role | Email |
 | --- | --- |
-| `users` | All five roles in one collection with `customer` / `technician` sub-documents |
-| `servicerequests` | Intake — tracking code, photos, priority, status timeline |
-| `quotations` | Line items, discount, tax, totals, approval state |
-| `jobs` | Scheduled work — checklist, photos, report, signature, timeline |
-| `invoices` | Billing — line items, balance, status |
-| `payments` | Payment ledger against invoices |
-| `maintenanceplans` | Plan catalogue (Essential, Comfort, Elite, Commercial) |
-| `maintenancecontracts` | Customer enrolments, visit schedule, renewal state |
-| `equipment` | Parts and equipment catalogue with stock levels |
-| `notifications` | Per-user notification feed |
-| `contactmessages` | Website enquiry inbox |
-| `testimonials` | Published customer stories |
+| Admin | admin@arcticair.com |
+| Dispatcher | dispatch@arcticair.com |
+| Technician | marcus@arcticair.com |
+| Customer | customer@arcticair.com |
 
-**Design notes**
+Other technicians: priya@, dmitri@, aaliyah@, tomas@, grace@arcticair.com.
 
-- Money is recalculated server-side in a `pre('validate')` hook on `Quotation` and `Invoice`, so
-  totals can never drift from their line items regardless of what a client sends.
-- Documents are numbered per year — `QT-2026-0042`, `INV-2026-0087`, `JOB-2026-0007`.
-- Public tracking uses a short, non-ambiguous code (`SR-7K4M2Q`) with `I`, `O`, `0` and `1` removed.
-- Deleting a user deactivates rather than removes, so history stays intact.
+**A good 3-minute walkthrough**
+
+1. Customer: approve a pending quotation.
+2. Dispatcher: the approved job appears, assign a technician from the board.
+3. Technician: mark en route, tick the checklist, upload a photo, write the report, take a
+   signature, complete the job.
+4. Admin: create an invoice from that job, issue it, record payment, then watch the analytics move.
 
 ---
 
-## API reference
+## What is built
 
-Base URL `/api`. Full endpoint list in [`docs/API.md`](docs/API.md).
+All nine modules from the brief are done.
+
+| Module | Status | Where |
+| --- | --- | --- |
+| 1. Corporate website | Done | `/`, `/services`, `/maintenance-plans`, `/emergency`, `/testimonials`, `/service-areas`, `/request-quote`, `/contact`, `/about`, `/faq` |
+| 2. Service requests | Done | `/request-quote` (4-step form with photo upload), `/track` (public tracking, no login) |
+| 3. Quotations | Done | Builder on the dispatcher request page, approve/reject in the customer portal |
+| 4. Technician dashboard | Done | `/dashboard/technician` and the job detail page |
+| 5. Dispatcher dashboard | Done | `/dashboard/dispatcher`, plus a week calendar |
+| 6. Maintenance contracts | Done | `/dashboard/admin/contracts`, `/dashboard/customer/contracts` |
+| 7. Invoices and payments | Done | Admin and customer invoice screens |
+| 8. Analytics | Done | `/dashboard/admin` |
+| 9. Notifications | Done | Bell in every dashboard header |
+
+**Pages.** All 14 pages listed in the brief exist, plus a few extras (About, Testimonials,
+Emergency, per-role sub-pages).
+
+**Database.** All 12 tables the brief suggested exist as collections: users, service requests,
+quotations, jobs, maintenance contracts, invoices, payments, equipment, notifications, plus
+maintenance plans, contact messages and testimonials. Customers, technicians and dispatchers live in
+the `users` collection separated by a `role` field rather than three separate tables (see
+[Decisions](#decisions-i-made-and-why)).
+
+**Non-functional requirements.** Mobile responsive (tested at 375px), no page scrolls sideways.
+Passwords are bcrypt hashed and never returned by the API. Production build is roughly 98–119 kB
+first load per page.
+
+**Business rules enforced on the server**, not just hidden in the UI:
+
+- A technician cannot be double-booked. Overlapping assignments return 409.
+- A job cannot be completed until the service report is submitted.
+- A quotation becomes read-only once the customer accepts or rejects it.
+- You cannot pay more than an invoice's outstanding balance.
+- An invoice with payments on it cannot be voided.
+- A job can only be invoiced once.
+- Customers can only ever read their own records. Technicians only their own jobs.
+
+---
+
+## Bonus tasks
+
+### Done
+
+**Dark mode.** Full light and dark themes. The theme is applied by an inline script in `<head>` so
+there is no flash of the wrong colour on load, and the choice is remembered.
+
+**Customer signature capture.** A real canvas signature pad on the technician's job screen. The
+drawing is flattened to a PNG, uploaded to Cloudinary, and shown on the job record and in the
+customer's copy of the service report.
+
+**Online payment integration (interface only).** Full payment flow with partial payments, running
+balance, status changes and a payment ledger.
+*Limitation:* no real payment gateway is connected. No card details are collected anywhere. The
+brief allows this ("UI implementation is sufficient if payment gateway integration is not
+completed").
+
+**Email automation (groundwork only).** Every event in the system creates its notification through
+one file, `server/src/services/notify.ts`.
+*Limitation:* delivery is in-app only. Nothing is actually emailed. That file is the single place a
+provider like SendGrid would be plugged in, and no controller would need to change.
+
+**Google Maps integration (partial).** Job addresses on the technician screen open directly in
+Google Maps for navigation.
+*Limitation:* this is a deep link, not an embedded map with pins. No Maps API key is used.
+
+---
+
+## Decisions I made and why
+
+**One `users` collection instead of separate customer/technician/dispatcher tables.**
+The brief lists them as separate tables. I used one collection with a `role` field and optional
+sub-documents for customer and technician details. Authentication, permissions and the "who did
+this" reference on every other record all work the same way for every role, which would mean
+duplicating logic three times otherwise. The ER diagram documents it either way.
+
+**Money is always recalculated on the server.**
+Quote and invoice totals are recomputed from the line items in a Mongoose hook before every save. If
+someone posts a quotation with `total: 99999`, it saves at the real value. There is a test for this.
+
+**Numbers are readable, not UUIDs.**
+Documents get numbers like `QT-2026-0042`, `INV-2026-0087`, `JOB-2026-0007`. Tracking codes are
+short (`SR-7K4M2Q`) and drop the characters I, O, 0 and 1 so nobody misreads one over the phone.
+
+**Guests can raise a request without an account.**
+The brief says guests can request quotations. Forcing a signup before someone can report a broken
+air conditioner in 45 degree heat would lose the job. They get a tracking code instead, and if they
+later register with the same email, their earlier requests attach to the new account automatically.
+
+**Deleting a user deactivates them.**
+Old jobs and invoices reference the user. Hard deleting would break that history, so `isActive` is
+flipped instead.
+
+**Charts and icons are hand-written SVG.**
+No Recharts, no icon library. It keeps the bundle small, and more usefully the chart colours come
+from the same CSS variables as everything else, so dark mode needs no separate chart theme.
+
+**Service types are shown as two-letter tags, not icons.**
+Started with a drawn icon per service type. Replaced them with monograms (IN, RP, MT…) because in a
+dense table a monogram scans just as fast, and it frees colour to mean one single thing: orange is
+an emergency, blue is everything else.
+
+**A DNS fallback for MongoDB.**
+`mongodb+srv://` needs a DNS SRV lookup, which Node does through c-ares rather than the OS resolver.
+On a machine whose only DNS servers are IPv6 that lookup fails even though everything else resolves
+fine. `server/src/config/db.ts` catches that specific error and retries with a plain host list from
+`MONGODB_URI_FALLBACK`. Leave that variable empty if your machine is normal.
+
+**The seed data is deterministic and forces recent activity.**
+The seeder uses a fixed random seed so numbers stay stable between runs, and it deliberately places
+a few payments on today's date. Without that the "revenue today" tile reads $0 whenever the seed
+runs on the 1st of a month, which makes a working dashboard look broken during a demo.
+
+
+## Folder layout
 
 ```
-POST   /auth/register                     Create a customer account
-POST   /auth/login                        Sign in
-GET    /auth/me                           Current user
-
-POST   /service-requests                  Raise a request (guest or customer, multipart)
-GET    /service-requests/track/:code      Public status lookup — no auth
-GET    /service-requests                  Scoped list (customers see only their own)
-
-POST   /quotations                        Build a quotation            [staff]
-POST   /quotations/:id/send               Issue it to the customer     [staff]
-POST   /quotations/:id/respond            Accept or reject             [customer]
-
-POST   /jobs                              Schedule a job               [staff]
-POST   /jobs/:id/assign                   Assign, with conflict check  [staff]
-PATCH  /jobs/:id/status                   en_route → in_progress → completed
-POST   /jobs/:id/photos                   Before/after upload (multipart)
-POST   /jobs/:id/signature                Capture signature (base64 → Cloudinary)
-POST   /jobs/:id/report                   Submit the service report
-
-POST   /invoices                          Generate from a completed job [staff]
-POST   /invoices/:id/payments             Record a payment
-
-GET    /contracts/plans                   Public plan catalogue
-POST   /contracts/:id/renew               Renew for another term
-POST   /contracts/reminders               Sweep and send renewal reminders [staff]
-
-GET    /analytics/overview                Admin analytics aggregate     [admin]
-GET    /analytics/dispatch                Dispatch day summary          [staff]
+hvac-website/
+├── client/                  Next.js frontend
+│   └── src/
+│       ├── app/(site)/      Public website
+│       ├── app/dashboard/   The four role dashboards
+│       ├── components/      Shared UI, charts, icons, dashboard pieces
+│       └── lib/             API client, auth, theme, formatting, types
+├── server/                  Express API
+│   └── src/
+│       ├── models/          12 Mongoose models
+│       ├── controllers/     Business logic
+│       ├── routes/          One router per resource
+│       ├── middleware/      Auth, errors, file upload
+│       ├── services/        Notification triggers
+│       └── seed/            Demo data generator
+└── docs/                    Diagrams, schema, API, test plan
 ```
-
-Every response follows `{ success, data }` or `{ success: false, message, details? }`.
-
-**Business rules enforced server-side**
-
-- A technician cannot be double-booked — overlapping assignments return `409`.
-- A job cannot be completed without a submitted service report.
-- Quotations become immutable once the customer responds.
-- Payments cannot exceed the outstanding balance.
-- Invoices with recorded payments cannot be voided.
-- Expired quotations are rejected and flipped to `expired` on the attempt.
-- Customers can only ever read and act on their own records, enforced in each controller.
-
----
-
-## Deployment
-
-**Frontend (Vercel)** — set root directory to `client`, add `NEXT_PUBLIC_API_URL` pointing at your
-deployed API, and deploy. The App Router build is fully static where possible.
-
-**Backend (Hostinger VPS or any Node host)**
-
-```bash
-npm --prefix server run build
-npm --prefix server start
-```
-
-Set `NODE_ENV=production`, `CLIENT_URL` to your deployed frontend origin (CORS reads it), and a
-strong `JWT_SECRET`. Put nginx in front for TLS.
-
-**Before going live:** rotate `JWT_SECRET`, rotate the Cloudinary and MongoDB credentials that were
-used in development, and restrict the Atlas IP allow-list to your server.
-
----
-
-## Bonus features
-
-Implemented from the bonus list:
-
-- **Customer signature capture** — canvas pad, flattened to PNG, uploaded to Cloudinary, rendered on
-  the job record and in the customer's service report.
-- **Dark mode** — full light/dark theming with no flash on load and a persisted preference.
-- **Email automation hooks** — every state change funnels through `services/notify.ts`, which is the
-  single place an email or SMS provider would be attached. UI delivery is live now.
-- **Online payment interface** — full payment flow with partial payments and a ledger. No real
-  gateway is connected, as the brief permits.
-- **Navigation integration** — job addresses deep-link into Google Maps from the technician view.
-
-Not implemented: live technician GPS tracking, SMS delivery, AI recommendation assistant, AI
-quotation generator.
-
----
-
-## Deliverables checklist
-
-- [x] Complete source code
-- [x] README documentation (this file)
-- [x] Database schema — [`docs/DATABASE.md`](docs/DATABASE.md)
-- [x] ER diagram — [`docs/ER-DIAGRAM.md`](docs/ER-DIAGRAM.md)
-- [x] System flow diagram — [`docs/SYSTEM-FLOW.md`](docs/SYSTEM-FLOW.md)
-- [x] API reference — [`docs/API.md`](docs/API.md)
-- [ ] Screenshots — capture from the running app into `docs/screenshots/`
-- [ ] Live deployment (bonus)
-- [ ] Presentation (max 10 slides)

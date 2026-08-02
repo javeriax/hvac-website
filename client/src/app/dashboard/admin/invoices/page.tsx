@@ -28,7 +28,7 @@ export default function AdminInvoicesPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
 
-  // Completed jobs that have not been invoiced yet — the natural source for a new invoice.
+  // Completed jobs that have not been invoiced yet, the natural source for a new invoice.
   const { data: jobs } = useApi<Job[]>('/jobs', { status: 'completed', limit: 300 });
   const invoicableJobs = useMemo(
     () => (jobs ?? []).filter((j) => !j.invoice),
@@ -265,7 +265,7 @@ export default function AdminInvoicesPage() {
             placeholder="Select a job to invoice"
             options={invoicableJobs.map((j) => ({
               value: j._id,
-              label: `${j.jobNumber} — ${j.title} (${
+              label: `${j.jobNumber} · ${j.title} (${
                 typeof j.customer === 'object' ? (j.customer as User).name : ''
               })`,
             }))}

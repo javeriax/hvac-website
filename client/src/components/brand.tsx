@@ -7,8 +7,8 @@ import { cx } from '@/lib/format';
 /* ==================================== logo =================================== */
 
 /**
- * The mark is a hexagonal duct cross-section with a thermal split running
- * through it — cool on the left, warm on the right. It reads at 20px.
+ * Company mark. The hexagon is a duct cross-section and the gradient splits
+ * cool/warm, which is the whole business in one shape. Still readable at 20px.
  */
 export function Logo({
   size = 30,
@@ -56,7 +56,7 @@ export function Logo({
   );
 
   return href ? (
-    <Link href={href} className="inline-flex shrink-0 items-center" aria-label="ArcticAir HVAC — home">
+    <Link href={href} className="inline-flex shrink-0 items-center" aria-label="ArcticAir HVAC, home">
       {mark}
     </Link>
   ) : (
@@ -103,9 +103,11 @@ function arcPath(cx0: number, cy0: number, r: number, fromDeg: number, toDeg: nu
 }
 
 /**
- * The hero instrument. It runs a slow cool-down cycle on its own, and becomes
- * directly draggable on pointer input — the same control a technician would
- * touch, rendered as brand furniture.
+ * The thermostat dial in the homepage hero.
+ *
+ * Left alone it loops a slow cool-down. As soon as someone drags it the loop
+ * stops and it follows the pointer instead. Arrow keys work too, so it is not
+ * mouse-only.
  */
 export function ThermostatDial({ className }: { className?: string }) {
   const [temp, setTemp] = useState(78);
@@ -192,7 +194,7 @@ export function ThermostatDial({ className }: { className?: string }) {
           </filter>
         </defs>
 
-        {/* tick ring — 44 graduations around the travel */}
+        {/* tick ring, 44 graduations around the travel */}
         {Array.from({ length: 45 }).map((_, i) => {
           const t = i / 44;
           const deg = ARC_START + t * ARC_SPAN;

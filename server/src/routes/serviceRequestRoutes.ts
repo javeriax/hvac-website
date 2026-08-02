@@ -3,7 +3,6 @@ import { optionalAuth, protect, requireStaff } from '../middleware/auth';
 import { upload } from '../middleware/upload';
 import {
   cancelServiceRequest,
-  claimServiceRequest,
   createServiceRequest,
   getServiceRequest,
   listServiceRequests,
@@ -19,7 +18,6 @@ router.get('/track/:code', trackServiceRequest);
 
 router.use(protect);
 router.get('/', listServiceRequests);
-router.post('/claim', claimServiceRequest);
 router.get('/:id', getServiceRequest);
 router.patch('/:id/status', requireStaff, updateRequestStatus);
 router.post('/:id/cancel', cancelServiceRequest);

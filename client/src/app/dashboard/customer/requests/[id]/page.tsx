@@ -18,8 +18,8 @@ import {
   IconSignature,
   IconTruck,
   IconUser,
-  SERVICE_ICONS,
-} from '@/components/icons';
+  } from '@/components/icons';
+import { ServiceMark } from '@/components/ServiceMark';
 import { Alert, Avatar, Button, LinkButton, Modal, Pill, Skeleton, TextArea, useToasts } from '@/components/ui';
 import { api } from '@/lib/api';
 import {
@@ -49,7 +49,6 @@ export default function CustomerRequestDetailPage() {
   const job = request?.job as Job | undefined;
   const quote = request?.quotation as Quotation | undefined;
   const tech = job?.technician as { name: string; phone?: string; avatarUrl?: string } | undefined;
-  const Icon = SERVICE_ICONS[request?.serviceType ?? 'repair'] ?? IconClipboard;
 
   const cancellable = request && !['completed', 'cancelled', 'in_progress'].includes(request.status);
 
@@ -91,9 +90,7 @@ export default function CustomerRequestDetailPage() {
             <div className="rounded-card border border-line bg-surface p-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-start gap-3.5">
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-frost/25 bg-frost/[0.08] text-frost">
-                    <Icon className="h-5 w-5" />
-                  </span>
+                  <ServiceMark type={request.serviceType} size={44} />
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <Pill tone={toneFor('request', request.status)}>{titleCase(request.status)}</Pill>

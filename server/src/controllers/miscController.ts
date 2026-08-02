@@ -9,6 +9,7 @@ import { notifyRole } from '../services/notify';
 
 /* ---------------------------------- notifications --------------------------------- */
 
+// The notification feed plus an unread count for the bell.
 export const listNotifications = asyncHandler(async (req: Request, res: Response) => {
   const filter: Record<string, unknown> = { user: req.user!._id };
   if (req.query.unread === 'true') filter.read = false;
@@ -21,6 +22,7 @@ export const listNotifications = asyncHandler(async (req: Request, res: Response
   res.json({ success: true, data: { notifications, unreadCount } });
 });
 
+// Marks one notification read.
 export const markNotificationRead = asyncHandler(async (req: Request, res: Response) => {
   const notification = await Notification.findOneAndUpdate(
     { _id: req.params.id, user: req.user!._id },
@@ -31,6 +33,7 @@ export const markNotificationRead = asyncHandler(async (req: Request, res: Respo
   res.json({ success: true, data: notification });
 });
 
+// Clears the whole unread count.
 export const markAllNotificationsRead = asyncHandler(async (req: Request, res: Response) => {
   await Notification.updateMany(
     { user: req.user!._id, read: false },
@@ -41,6 +44,7 @@ export const markAllNotificationsRead = asyncHandler(async (req: Request, res: R
 
 /* ------------------------------------ contact ------------------------------------- */
 
+// Website contact form. Drops into the admin inbox and pings admins.
 export const submitContactMessage = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, phone, subject, message } = req.body;
   if (!name || !email || !message) {
@@ -62,9 +66,10 @@ export const submitContactMessage = asyncHandler(async (req: Request, res: Respo
     link: '/dashboard/admin/messages',
   });
 
-  res.status(201).json({ success: true, data: { id: doc.id }, message: 'Thanks — we will be in touch shortly.' });
+  res.status(201).json({ success: true, data: { id: doc.id }, message: 'Thanks, we will be in touch shortly.' });
 });
 
+// The contact inbox.
 export const listContactMessages = asyncHandler(async (req: Request, res: Response) => {
   const filter: Record<string, unknown> = {};
   if (req.query.status) filter.status = req.query.status;
@@ -73,6 +78,7 @@ export const listContactMessages = asyncHandler(async (req: Request, res: Respon
   res.json({ success: true, count: messages.length, data: messages });
 });
 
+// Moves a message between new / read / responded / archived.
 export const updateContactMessage = asyncHandler(async (req: Request, res: Response) => {
   const message = await ContactMessage.findByIdAndUpdate(
     req.params.id,
@@ -85,6 +91,7 @@ export const updateContactMessage = asyncHandler(async (req: Request, res: Respo
 
 /* ----------------------------------- equipment ------------------------------------ */
 
+// Equipment catalogue, used by the quote builder search.
 export const listEquipment = asyncHandler(async (req: Request, res: Response) => {
   const filter: Record<string, unknown> = { isActive: true };
   if (req.query.category) filter.category = req.query.category;
@@ -97,6 +104,7 @@ export const listEquipment = asyncHandler(async (req: Request, res: Response) =>
   res.json({ success: true, count: equipment.length, data: equipment });
 });
 
+// Admin adding or editing a catalogue item.
 export const upsertEquipment = asyncHandler(async (req: Request, res: Response) => {
   const item = req.params.id
     ? await Equipment.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
@@ -107,6 +115,7 @@ export const upsertEquipment = asyncHandler(async (req: Request, res: Response) 
 
 /* ---------------------------------- testimonials ---------------------------------- */
 
+// Published testimonials for the public site.
 export const listTestimonials = asyncHandler(async (_req: Request, res: Response) => {
   const testimonials = await Testimonial.find({ isPublished: true }).sort({ createdAt: -1 }).limit(24);
   res.json({ success: true, data: testimonials });

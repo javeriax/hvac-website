@@ -20,7 +20,7 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-/** Masonry-ish wall — column layout keeps ragged quote lengths from creating gaps. */
+/** Masonry-ish wall, column layout keeps ragged quote lengths from creating gaps. */
 export function TestimonialWall({ limit }: { limit?: number }) {
   const [items, setItems] = useState<Testimonial[] | null>(null);
 

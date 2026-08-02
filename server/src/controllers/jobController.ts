@@ -69,6 +69,7 @@ async function findScheduleConflict(
   return Job.findOne(filter).select('jobNumber scheduledStart scheduledEnd');
 }
 
+// Turns an approved request into a scheduled job and gives it a checklist for that service type.
 export const createJob = asyncHandler(async (req: Request, res: Response) => {
   const { serviceRequest: requestId, technician, scheduledStart, durationMinutes = 120, priority } = req.body;
 
@@ -127,7 +128,7 @@ export const createJob = asyncHandler(async (req: Request, res: Response) => {
       user: technician,
       type: 'technician_assigned',
       title: 'New job assigned',
-      message: `${job.title} — ${start.toLocaleString('en-US')} at ${job.address.city}.`,
+      message: `${job.title}, ${start.toLocaleString('en-US')} at ${job.address.city}.`,
       link: `/dashboard/technician/jobs/${job.id}`,
     });
     await User.findByIdAndUpdate(technician, { 'technician.status': 'on_job' });
@@ -136,6 +137,7 @@ export const createJob = asyncHandler(async (req: Request, res: Response) => {
   res.status(201).json({ success: true, data: job });
 });
 
+// Lists jobs, scoped by role. Supports a single date or a from/to range for the calendar.
 export const listJobs = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user!;
   const filter: FilterQuery<JobDoc> = {};
@@ -167,6 +169,7 @@ export const listJobs = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, count: jobs.length, data: jobs });
 });
 
+// One job with everything the technician needs on site.
 export const getJob = asyncHandler(async (req: Request, res: Response) => {
   const job = await Job.findById(req.params.id)
     .populate('customer', 'name email phone avatarUrl customer')
@@ -186,7 +189,7 @@ export const getJob = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: job });
 });
 
-/** Dispatcher assigns or reassigns a technician. */
+// Assign or reassign a technician. Rejects the save if it would double-book them.
 export const assignTechnician = asyncHandler(async (req: Request, res: Response) => {
   const { technician, scheduledStart, durationMinutes } = req.body;
   const job = await Job.findById(req.params.id);
@@ -221,7 +224,7 @@ export const assignTechnician = asyncHandler(async (req: Request, res: Response)
     user: tech._id,
     type: 'technician_assigned',
     title: 'New job assigned',
-    message: `${job.title} — ${start.toLocaleString('en-US')}.`,
+    message: `${job.title}, ${start.toLocaleString('en-US')}.`,
     link: `/dashboard/technician/jobs/${job.id}`,
   });
   await notify({
@@ -235,6 +238,7 @@ export const assignTechnician = asyncHandler(async (req: Request, res: Response)
   res.json({ success: true, data: job });
 });
 
+// Moves a job to a new time and tells the customer.
 export const rescheduleJob = asyncHandler(async (req: Request, res: Response) => {
   const { scheduledStart, durationMinutes = 120, reason } = req.body;
   const job = await Job.findById(req.params.id);
@@ -264,7 +268,8 @@ export const rescheduleJob = asyncHandler(async (req: Request, res: Response) =>
   res.json({ success: true, data: job });
 });
 
-/** Technician status transitions: en_route → in_progress → completed. */
+// Drives en route -> in progress -> completed.
+// Completing is blocked until a report exists, since the invoice is built from it.
 export const updateJobStatus = asyncHandler(async (req: Request, res: Response) => {
   const { status, note } = req.body as { status: JobStatus; note?: string };
   const job = await Job.findById(req.params.id);
@@ -300,7 +305,7 @@ export const updateJobStatus = asyncHandler(async (req: Request, res: Response) 
     });
     await notifyRole(['admin'], {
       type: 'job_completed',
-      title: 'Job completed — ready to invoice',
+      title: 'Job completed, ready to invoice',
       message: `${job.jobNumber} (${job.title}) was closed out.`,
       link: '/dashboard/admin/invoices',
     });
@@ -314,6 +319,7 @@ export const updateJobStatus = asyncHandler(async (req: Request, res: Response) 
   res.json({ success: true, data: job });
 });
 
+// Ticks or unticks one checklist line.
 export const toggleChecklistItem = asyncHandler(async (req: Request, res: Response) => {
   const { index, done } = req.body;
   const job = await Job.findById(req.params.id);
@@ -325,6 +331,7 @@ export const toggleChecklistItem = asyncHandler(async (req: Request, res: Respon
   res.json({ success: true, data: job.checklist });
 });
 
+// Appends a note to the job. Visible to office staff and on the customer record.
 export const addJobNote = asyncHandler(async (req: Request, res: Response) => {
   const job = await Job.findById(req.params.id);
   if (!job) throw ApiError.notFound('Job not found');
@@ -335,6 +342,7 @@ export const addJobNote = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: job.notes });
 });
 
+// Uploads before/after photos to Cloudinary and pins them to the job.
 export const uploadJobPhotos = asyncHandler(async (req: Request, res: Response) => {
   const job = await Job.findById(req.params.id);
   if (!job) throw ApiError.notFound('Job not found');
@@ -351,7 +359,7 @@ export const uploadJobPhotos = asyncHandler(async (req: Request, res: Response) 
   res.status(201).json({ success: true, data: job.photos });
 });
 
-/** Stores the customer's on-site signature (base64 canvas export → Cloudinary). */
+// Stores the customer signature drawn on site. Comes in as base64, goes out to Cloudinary.
 export const captureSignature = asyncHandler(async (req: Request, res: Response) => {
   const { dataUrl, signedBy } = req.body;
   if (!dataUrl || !signedBy) throw ApiError.badRequest('Signature image and signer name are required');
@@ -366,6 +374,7 @@ export const captureSignature = asyncHandler(async (req: Request, res: Response)
   res.json({ success: true, data: job.signature });
 });
 
+// The service report. This is what the customer reads and what the invoice is priced from.
 export const submitReport = asyncHandler(async (req: Request, res: Response) => {
   const { summary, workPerformed, partsUsed, recommendations, laborHours } = req.body;
   if (!summary || !workPerformed) {

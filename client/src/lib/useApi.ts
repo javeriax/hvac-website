@@ -10,8 +10,10 @@ interface State<T> {
 }
 
 /**
- * Small fetch-on-mount hook with a manual `reload`. Deliberately minimal —
- * the dashboards are read-then-act, so a full cache layer would be overkill.
+ * Fetch on mount, plus a reload() for after you change something.
+ *
+ * No caching layer. These screens read data then act on it, so the extra
+ * machinery would not earn its keep.
  */
 export function useApi<T>(
   path: string | null,

@@ -3,6 +3,7 @@ import { ApiError } from '../utils/ApiError';
 import { asyncHandler } from '../utils/asyncHandler';
 import { signToken } from '../utils/jwt';
 import { User, UserDoc } from '../models/User';
+import { ServiceRequest } from '../models/ServiceRequest';
 import { notify } from '../services/notify';
 
 function authPayload(user: UserDoc) {
@@ -12,6 +13,8 @@ function authPayload(user: UserDoc) {
   };
 }
 
+// Sign up. Always creates a customer; staff accounts are made by an admin.
+// Also picks up any guest requests raised with this email so the history is there on day one.
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password, phone, address, propertyType, companyName } = req.body;
 
@@ -25,7 +28,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const exists = await User.findOne({ email: String(email).toLowerCase() });
   if (exists) throw ApiError.conflict('An account with that email already exists');
 
-  // Self-registration always creates a customer — staff accounts are provisioned by an admin.
+  // Self-registration always creates a customer, staff accounts are provisioned by an admin.
   const user = await User.create({
     name,
     email,
@@ -40,18 +43,30 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     },
   });
 
+  // Someone may have raised requests as a guest before signing up. Attach any
+  // that used this email so their history is there the moment they log in.
+  const claimed = await ServiceRequest.updateMany(
+    { customer: { $exists: false }, 'contact.email': user.email },
+    { $set: { customer: user._id } },
+  );
+
   await notify({
     user: user._id,
     type: 'system',
     title: 'Welcome to ArcticAir',
-    message:
-      'Your customer account is live. Request a service, track a technician, and manage invoices from here.',
+    message: claimed.modifiedCount
+      ? `Your account is live, and we found ${claimed.modifiedCount} earlier request(s) under this email.`
+      : 'Your customer account is live. Request a service, track a technician, and manage invoices from here.',
     link: '/dashboard/customer',
   });
 
-  res.status(201).json({ success: true, data: authPayload(user) });
+  res.status(201).json({
+    success: true,
+    data: { ...authPayload(user), claimedRequests: claimed.modifiedCount },
+  });
 });
 
+// Email + password in, JWT + user out. Also stamps lastLoginAt.
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (!email || !password) throw ApiError.badRequest('Email and password are required');
@@ -68,10 +83,12 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: authPayload(user) });
 });
 
+// Returns whoever the current token belongs to. Used to restore the session on refresh.
 export const me = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, data: req.user!.toJSON() });
 });
 
+// Lets a user edit their own name, phone and (for customers) address.
 export const updateProfile = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user!;
   const { name, phone, avatarUrl, address, propertyType, companyName, preferredContact } = req.body;
@@ -91,6 +108,7 @@ export const updateProfile = asyncHandler(async (req: Request, res: Response) =>
   res.json({ success: true, data: user.toJSON() });
 });
 
+// Password change. Requires the current one so a stolen tab cannot lock the owner out.
 export const changePassword = asyncHandler(async (req: Request, res: Response) => {
   const { currentPassword, newPassword } = req.body;
   if (!currentPassword || !newPassword) {

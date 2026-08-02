@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { IconMinus, IconPlus } from '@/components/icons';
 import { cx } from '@/lib/format';
 
-/** Accordion with a single open panel — grid-rows transition keeps it smooth. */
+/** Accordion with a single open panel, grid-rows transition keeps it smooth. */
 export function FaqList({ items }: { items: { q: string; a: string }[] }) {
   const [open, setOpen] = useState<number | null>(0);
 

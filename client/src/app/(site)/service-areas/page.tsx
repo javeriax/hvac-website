@@ -9,7 +9,7 @@ import { SERVICE_AREAS } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Service Areas',
   description:
-    'ArcticAir HVAC covers twelve cities across the Phoenix metro — Phoenix, Scottsdale, Mesa, Tempe, Chandler, Gilbert, Glendale, Peoria and more.',
+    'ArcticAir HVAC covers twelve cities across the Phoenix metro, Phoenix, Scottsdale, Mesa, Tempe, Chandler, Gilbert, Glendale, Peoria and more.',
 };
 
 export default function ServiceAreasPage() {
@@ -21,7 +21,7 @@ export default function ServiceAreasPage() {
         index="03"
         eyebrow="Service Areas"
         title="Twelve cities, measured response times"
-        lede="These are median response times we actually recorded over the last twelve months — not marketing promises. Flagship cities carry a permanently stationed crew; outer cities are covered from the nearest depot."
+        lede="These are median response times we actually recorded over the last twelve months, not marketing promises. Flagship cities carry a permanently stationed crew; outer cities are covered from the nearest depot."
         aside={<CoverageChecker />}
       />
 
@@ -103,7 +103,7 @@ export default function ServiceAreasPage() {
             <Link href="/contact" className="link-underline text-frost">
               Send us the address
             </Link>{' '}
-            — we take selected work beyond the metro and will tell you honestly if you are better
+           , we take selected work beyond the metro and will tell you honestly if you are better
             served by someone closer.
           </p>
         </Reveal>

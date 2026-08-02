@@ -32,7 +32,7 @@ export const SERVICES: ServiceDef[] = [
     name: 'System Installation',
     short: 'New systems, sized properly.',
     description:
-      'Full replacement and new-build installation for split systems, packaged units, heat pumps and mini splits. Every quote starts with a load calculation and a duct assessment — not a guess based on the box already on your pad.',
+      'Full replacement and new-build installation for split systems, packaged units, heat pumps and mini splits. Every quote starts with a load calculation and a duct assessment, not a guess based on the box already on your pad.',
     bullets: [
       'Manual J load calculation before sizing',
       'Duct static pressure verified on commissioning',
@@ -117,13 +117,13 @@ export const SERVICES: ServiceDef[] = [
     name: 'Smart Controls',
     short: 'Controls that actually get used.',
     description:
-      'Smart and programmable thermostat supply, installation and configuration — including zoning controls and multi-stage equipment wiring that most handymen get wrong.',
+      'Smart and programmable thermostat supply, installation and configuration, including zoning controls and multi-stage equipment wiring that most handymen get wrong.',
     bullets: [
       'Correct wiring for multi-stage and heat-pump equipment',
       'C-wire installation where missing',
       'App setup, scheduling and geofencing configured',
       'Zoning and remote sensor placement',
-      'Walkthrough before we leave — every time',
+      'Walkthrough before we leave, every time',
     ],
     startingAt: '$149',
     duration: '1–2 hours',
@@ -174,7 +174,7 @@ export const PROCESS = [
   {
     step: '01',
     title: 'Tell us what the system is doing',
-    body: 'Describe the fault, attach photos, and pick a window that works. Takes about ninety seconds — no account required.',
+    body: 'Describe the fault, attach photos, and pick a window that works. Takes about ninety seconds, and no account is required.',
   },
   {
     step: '02',
@@ -189,7 +189,7 @@ export const PROCESS = [
   {
     step: '04',
     title: 'Sign off and keep the record',
-    body: 'Before-and-after photos, meter readings and the full service report land in your portal — permanently, not on a carbon copy.',
+    body: 'Before-and-after photos, meter readings and the full service report land in your portal permanently, not on a carbon copy.',
   },
 ];
 
@@ -215,11 +215,11 @@ export const WHY_US = [
 export const FAQS = [
   {
     q: 'How quickly can you get to an emergency?',
-    a: 'Our median emergency response across the Phoenix metro is two hours. Elite Total Care members carry a contractual four-hour guarantee, 24/7/365. Everyone else is dispatched to the next available van, prioritised by severity — total failure in extreme heat and any gas or electrical safety concern jump the queue.',
+    a: 'Our median emergency response across the Phoenix metro is two hours. Elite Total Care members carry a contractual four-hour guarantee, 24/7/365. Everyone else is dispatched to the next available van, prioritised by severity. Total failure in extreme heat and any gas or electrical safety concern jump the queue.',
   },
   {
     q: 'Do you charge for a quotation?',
-    a: 'Replacement and installation quotes are free, including the load calculation. Repair work carries a $95 diagnostic fee because it involves real measurement time — and that fee is credited in full against the repair if you approve the work.',
+    a: 'Replacement and installation quotes are free, including the load calculation. Repair work carries a $95 diagnostic fee because it involves real measurement time, and that fee is credited in full against the repair if you approve the work.',
   },
   {
     q: 'What does the diagnostic actually cover?',
@@ -227,7 +227,7 @@ export const FAQS = [
   },
   {
     q: 'Is a maintenance plan actually worth it?',
-    a: 'It depends on your system. If it is under five years old and you are diligent about filters, probably not yet. Past that, two tune-ups a year plus the repair discount usually costs less than a single emergency call-out — and the plan discount applies to that call-out too if you need it.',
+    a: 'It depends on your system. If it is under five years old and you are diligent about filters, probably not yet. Past that, two tune-ups a year plus the repair discount usually costs less than a single emergency call-out, and the plan discount applies to that call-out too if you need it.',
   },
   {
     q: 'Can I keep my existing equipment brand?',
@@ -239,11 +239,11 @@ export const FAQS = [
   },
   {
     q: 'Do you handle commercial properties?',
-    a: 'Yes — rooftop units, split systems, walk-in refrigeration and multi-tenant buildings. Our Commercial Assurance plan includes six scheduled visits a year, compliance documentation and quarterly performance reporting.',
+    a: 'Yes. Rooftop units, split systems, walk-in refrigeration and multi-tenant buildings. Our Commercial Assurance plan includes six scheduled visits a year, compliance documentation and quarterly performance reporting.',
   },
   {
     q: 'What warranty comes with the work?',
-    a: 'Labour is warranted for 90 days on repairs and two years on installations. Parts carry the manufacturer warranty, typically 5–10 years on qualifying equipment when registered — and we file that registration for you.',
+    a: 'Labour is warranted for 90 days on repairs and two years on installations. Parts carry the manufacturer warranty, typically 5–10 years on qualifying equipment when registered, and we file that registration for you.',
   },
 ];
 

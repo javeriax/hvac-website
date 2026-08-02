@@ -15,8 +15,8 @@ import {
   IconStar,
   IconTruck,
   IconUser,
-  SERVICE_ICONS,
-} from '@/components/icons';
+  } from '@/components/icons';
+import { ServiceMark } from '@/components/ServiceMark';
 import { EmptyState, Pill, Skeleton } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
 import {
@@ -117,13 +117,12 @@ export default function TechnicianTodayPage() {
                 Enjoy it. Your dispatcher will notify you if an emergency comes in.
               </EmptyState>
             ) : (
-              /* timeline rail — each job pinned to its start time */
+              /* timeline rail, each job pinned to its start time */
               <ol className="relative space-y-3 border-l border-line pl-8">
                 {today
                   .slice()
                   .sort((a, b) => +new Date(a.scheduledStart) - +new Date(b.scheduledStart))
                   .map((job) => {
-                    const Icon = SERVICE_ICONS[job.serviceType] ?? IconTruck;
                     const customer = job.customer as User;
                     const live = ['en_route', 'in_progress'].includes(job.status);
                     const urgent = job.priority === 'emergency';
@@ -155,16 +154,7 @@ export default function TechnicianTodayPage() {
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex min-w-0 items-start gap-3">
-                              <span
-                                className={cx(
-                                  'grid h-9 w-9 shrink-0 place-items-center rounded-lg border',
-                                  urgent
-                                    ? 'border-danger/30 bg-danger/10 text-danger'
-                                    : 'border-frost/25 bg-frost/[0.08] text-frost',
-                                )}
-                              >
-                                <Icon className="h-4 w-4" />
-                              </span>
+                              <ServiceMark type={job.serviceType} size={36} />
                               <div className="min-w-0">
                                 <p className="truncate text-[14px] font-semibold">{job.title}</p>
                                 <p className="tnum mt-0.5 text-2xs text-muted">

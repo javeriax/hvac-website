@@ -26,11 +26,11 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'ServiceFlow — ArcticAir HVAC Solutions',
+    default: 'ServiceFlow · ArcticAir HVAC Solutions',
     template: '%s · ArcticAir HVAC',
   },
   description:
-    'ArcticAir HVAC Solutions — installation, emergency repair, preventive maintenance and annual service contracts for residential and commercial properties across Arizona.',
+    'ArcticAir HVAC Solutions, installation, emergency repair, preventive maintenance and annual service contracts for residential and commercial properties across Arizona.',
   keywords: ['HVAC', 'air conditioning', 'heating', 'emergency repair', 'maintenance plans', 'Arizona'],
   authors: [{ name: 'BranDive Media Solutions' }],
 };

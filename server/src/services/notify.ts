@@ -12,9 +12,10 @@ interface NotifyInput {
 }
 
 /**
- * Central notification trigger (Module 9). Every state change in the system
- * funnels through here so the bell, the customer portal and the admin feed
- * all stay in sync. Email/SMS delivery is stubbed — the UI is the deliverable.
+ * Every notification in the app is created through here (module 9).
+ *
+ * Keeping it in one place stops the bell, the customer portal and the admin feed
+ * drifting apart, and it is the single spot to add email or SMS later.
  */
 export async function notify(input: NotifyInput) {
   if (!input.user) return null;

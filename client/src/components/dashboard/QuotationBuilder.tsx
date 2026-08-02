@@ -27,8 +27,11 @@ const LABOR_RATES: Record<string, number> = {
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
 /**
- * Quotation builder (Module 3). Mirrors the server's money maths exactly so the
- * dispatcher sees the final total live, before anything is persisted.
+ * Quote builder (module 3).
+ *
+ * Repeats the same discount/tax maths the server does so the dispatcher watches
+ * the total move as they type. The server recalculates from the line items on
+ * save regardless, so anything sent from here is only a preview.
  */
 export function QuotationBuilder({
   request,

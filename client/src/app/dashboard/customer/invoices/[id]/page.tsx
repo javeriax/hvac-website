@@ -46,7 +46,7 @@ export default function CustomerInvoiceDetailPage() {
         method,
         reference: `PORTAL-${Date.now().toString(36).toUpperCase()}`,
       });
-      push('Payment recorded — thank you');
+      push('Payment recorded, thank you');
       setPayOpen(false);
       await reload();
     } catch (err) {
@@ -101,7 +101,7 @@ export default function CustomerInvoiceDetailPage() {
 
           {invoice.status === 'paid' && (
             <Alert tone="ok" title="Paid in full">
-              Settled on {fmtDate(invoice.paidAt)}. Thank you — the receipt is in the payment history
+              Settled on {fmtDate(invoice.paidAt)}. Thank you, the receipt is in the payment history
               below.
             </Alert>
           )}
@@ -114,7 +114,7 @@ export default function CustomerInvoiceDetailPage() {
         open={payOpen}
         onClose={() => setPayOpen(false)}
         title="Make a payment"
-        subtitle="Demonstration gateway — no card details are collected or stored."
+        subtitle="Demonstration gateway, no card details are collected or stored."
         footer={
           <>
             <Button variant="ghost" size="sm" onClick={() => setPayOpen(false)}>

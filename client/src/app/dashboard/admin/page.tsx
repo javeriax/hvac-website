@@ -5,7 +5,6 @@ import { useMemo, useState } from 'react';
 import { DashboardShell } from '@/components/dashboard/DashboardShell';
 import { AreaChart, BarChart, DonutChart, StatTile } from '@/components/charts';
 import {
-  IconArrowRight,
   IconCheck,
   IconChart,
   IconClock,
@@ -147,7 +146,7 @@ export default function AdminAnalyticsPage() {
                 </h2>
                 <p className="mt-0.5 text-[12.5px] text-muted">
                   {chart === 'revenue'
-                    ? 'Settled payments by month — hover any point for the exact figure.'
+                    ? 'Settled payments by month, hover any point for the exact figure.'
                     : 'Accounts created per month.'}
                 </p>
               </div>
@@ -288,7 +287,6 @@ export default function AdminAnalyticsPage() {
                 </div>
                 <Link href="/dashboard/admin/contracts" className="btn-ghost btn-sm mt-4 w-full">
                   Manage renewals
-                  <IconArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
 

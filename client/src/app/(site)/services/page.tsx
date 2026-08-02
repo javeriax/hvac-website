@@ -3,11 +3,9 @@ import Link from 'next/link';
 import { Reveal } from '@/components/brand';
 import { PageHero } from '@/components/site/PageHero';
 import {
-  IconArrowRight,
   IconCheck,
   IconClock,
   IconPhone,
-  SERVICE_ICONS,
 } from '@/components/icons';
 import { COMPANY, SERVICES } from '@/lib/site';
 
@@ -24,7 +22,7 @@ export default function ServicesPage() {
         index="01"
         eyebrow="Services"
         title="Every service, priced as line items"
-        lede="Seven service lines covering residential and light-commercial HVAC. Each one includes what it includes — no bundled mystery, no surprise add-ons after the van arrives."
+        lede="Seven service lines covering residential and light-commercial HVAC. Each one includes what it includes, no bundled mystery, no surprise add-ons after the van arrives."
         aside={
           <div className="rounded-card border border-line bg-surface p-5">
             <p className="text-2xs uppercase tracking-[0.14em] text-faint">Not sure what you need?</p>
@@ -33,7 +31,6 @@ export default function ServicesPage() {
             </p>
             <Link href="/request-quote" className="btn-primary btn-sm mt-4 w-full">
               Request a quote
-              <IconArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         }
@@ -55,7 +52,6 @@ export default function ServicesPage() {
       <div className="mx-auto max-w-7xl px-5 py-16 lg:py-20">
         <div className="space-y-4">
           {SERVICES.map((service, i) => {
-            const Icon = SERVICE_ICONS[service.slug] ?? SERVICE_ICONS.repair;
             const emergency = service.slug === 'emergency';
 
             return (
@@ -68,19 +64,20 @@ export default function ServicesPage() {
                 >
                   <div className="grid gap-8 p-7 lg:grid-cols-[0.95fr_1.05fr] lg:p-9">
                     <div>
-                      <div className="flex items-center gap-3">
+                      {/* The index is the mark. No pictogram, just a set numeral
+                          against a rule, coloured by whether the work is urgent. */}
+                      <div className="flex items-baseline gap-4">
                         <span
-                          className={`grid h-11 w-11 place-items-center rounded-xl border ${
-                            emergency
-                              ? 'border-ember/30 bg-ember/10 text-ember'
-                              : 'border-frost/25 bg-frost/[0.08] text-frost'
+                          className={`tnum text-[40px] font-semibold leading-none tracking-[-0.04em] ${
+                            emergency ? 'text-ember/70' : 'text-frost/60'
                           }`}
                         >
-                          <Icon className="h-5 w-5" />
-                        </span>
-                        <span className="index-mark opacity-60">
                           {String(i + 1).padStart(2, '0')}
                         </span>
+                        <span
+                          className={`h-px flex-1 ${emergency ? 'bg-ember/25' : 'bg-line'}`}
+                          aria-hidden
+                        />
                       </div>
 
                       <h2 className="mt-5 text-[24px] font-semibold leading-tight">{service.name}</h2>
@@ -118,7 +115,6 @@ export default function ServicesPage() {
                               className="btn-primary btn-sm"
                             >
                               Request this
-                              <IconArrowRight className="h-3.5 w-3.5" />
                             </Link>
                           )}
                         </div>
@@ -153,7 +149,7 @@ export default function ServicesPage() {
           <div className="mt-14 rounded-card border border-line bg-surface p-8 text-center">
             <h2 className="text-[22px] font-semibold">Something not on the list?</h2>
             <p className="mx-auto mt-3 max-w-lg text-[14px] leading-relaxed text-muted">
-              Zoning, humidifiers, ERVs, walk-in refrigeration, mini split retrofits — if it moves
+              Zoning, humidifiers, ERVs, walk-in refrigeration, mini split retrofits, if it moves
               air or changes temperature, describe it and we will tell you honestly whether we are
               the right people for it.
             </p>

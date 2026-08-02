@@ -13,7 +13,7 @@ import {
   IconMapPin,
   IconUser,
   IconX,
-  SERVICE_ICONS,
+  IconClipboard,
 } from '@/components/icons';
 import { Alert, Button, SelectField, TextArea, TextField } from '@/components/ui';
 import { ApiError, API_BASE, tokenStore } from '@/lib/api';
@@ -227,7 +227,7 @@ export function ServiceRequestForm() {
         </span>
         <h2 className="mt-6 text-[23px] font-semibold">Request logged</h2>
         <p className="mx-auto mt-3 max-w-md text-[14px] leading-relaxed text-muted">
-          A dispatcher is reviewing it now. Keep this tracking code — it is all you need to follow
+          A dispatcher is reviewing it now. Keep this tracking code, it is all you need to follow
           the request, with or without an account.
         </p>
 
@@ -307,12 +307,11 @@ export function ServiceRequestForm() {
           <div className="animate-fade-up">
             <h2 className="text-[19px] font-semibold">What do you need?</h2>
             <p className="mt-1.5 text-[13.5px] text-muted">
-              Pick the closest match — a dispatcher will confirm before anything is scheduled.
+              Pick the closest match, a dispatcher will confirm before anything is scheduled.
             </p>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {SERVICES.map((s) => {
-                const Icon = SERVICE_ICONS[s.slug] ?? SERVICE_ICONS.repair;
+              {SERVICES.map((s, idx) => {
                 const on = form.serviceType === s.slug;
                 const urgent = s.slug === 'emergency';
                 return (
@@ -321,28 +320,36 @@ export function ServiceRequestForm() {
                     type="button"
                     onClick={() => set('serviceType', s.slug)}
                     className={cx(
-                      'flex flex-col items-start gap-3 rounded-xl border p-4 text-left transition-all',
+                      'relative overflow-hidden rounded-xl border p-4 pl-5 text-left transition-all',
                       on
                         ? urgent
-                          ? 'border-ember/50 bg-ember/[0.07] shadow-glow-ember'
-                          : 'border-frost/50 bg-frost/[0.06] shadow-glow-frost'
+                          ? 'border-ember/50 bg-ember/[0.07]'
+                          : 'border-frost/50 bg-frost/[0.06]'
                         : 'border-line bg-sunken hover:border-frost/30',
                     )}
                   >
+                    {/* selection reads as a coloured edge, not a badge */}
                     <span
+                      aria-hidden
                       className={cx(
-                        'grid h-9 w-9 place-items-center rounded-lg border',
-                        urgent
-                          ? 'border-ember/30 bg-ember/10 text-ember'
-                          : 'border-frost/25 bg-frost/[0.08] text-frost',
+                        'absolute inset-y-0 left-0 w-[3px] transition-opacity',
+                        urgent ? 'bg-ember' : 'bg-frost',
+                        on ? 'opacity-100' : 'opacity-0',
                       )}
-                    >
-                      <Icon className="h-4 w-4" />
+                    />
+                    <span className="flex items-baseline justify-between gap-2">
+                      <span className="text-[14px] font-semibold">{s.name}</span>
+                      <span
+                        className={cx(
+                          'tnum text-2xs',
+                          on ? (urgent ? 'text-ember' : 'text-frost') : 'text-faint',
+                        )}
+                      >
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
                     </span>
-                    <span>
-                      <span className="block text-[14px] font-semibold">{s.name}</span>
-                      <span className="mt-0.5 block text-2xs text-muted">from {s.startingAt}</span>
-                    </span>
+                    <span className="mt-1 block text-2xs leading-snug text-muted">{s.short}</span>
+                    <span className="tnum mt-2 block text-2xs text-faint">from {s.startingAt}</span>
                   </button>
                 );
               })}
@@ -415,7 +422,7 @@ export function ServiceRequestForm() {
                 placeholder={selected ? `e.g. ${selected.short}` : 'e.g. AC blowing warm air upstairs'}
                 value={form.title}
                 onChange={(e) => set('title', e.target.value)}
-                hint="Optional — we will generate one if you leave it blank."
+                hint="Optional, we will generate one if you leave it blank."
               />
 
               <TextArea
@@ -588,7 +595,7 @@ export function ServiceRequestForm() {
           <div className="animate-fade-up">
             <h2 className="text-[19px] font-semibold">How do we reach you?</h2>
             <p className="mt-1.5 text-[13.5px] text-muted">
-              No account needed — you will get a tracking code either way.
+              No account needed, you will get a tracking code either way.
             </p>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -629,7 +636,7 @@ export function ServiceRequestForm() {
               </p>
               <dl className="space-y-3 text-[13.5px]">
                 {[
-                  ['Service', selected?.name ?? '—', SERVICE_ICONS[form.serviceType || 'repair']],
+                  ['Service', selected?.name ?? '—', IconClipboard],
                   ['Priority', PRIORITY_LABELS[form.serviceType === 'emergency' ? 'emergency' : form.priority], form.serviceType === 'emergency' ? IconFlame : IconClock],
                   ['Address', [form.line1, form.city, form.state, form.zip].filter(Boolean).join(', ') || '—', IconMapPin],
                   ['Contact', form.contactName || '—', IconUser],
@@ -659,7 +666,7 @@ export function ServiceRequestForm() {
 
             <p className="mt-4 text-xs leading-relaxed text-faint">
               Submitting creates a service request in our dispatch queue. It does not commit you to
-              any work — you will receive a priced quotation to approve or decline first.
+              any work, you will receive a priced quotation to approve or decline first.
             </p>
           </div>
         )}

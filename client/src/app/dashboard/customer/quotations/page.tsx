@@ -36,7 +36,7 @@ export default function CustomerQuotationsPage() {
           </div>
         )}
 
-        <TablePanel title="All quotations" subtitle="Drafts are hidden until we send them to you">
+        <TablePanel title="All quotations">
           <DataTable<Quotation>
             rows={data}
             loading={loading}

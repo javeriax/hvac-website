@@ -125,7 +125,7 @@ export default function AdminContractsPage() {
 
         {counts.expiring > 0 && (
           <Alert tone="warn" title={`${counts.expiring} contract(s) expiring within 60 days`}>
-            Send reminders now — renewals chased inside the window convert far better than a lapsed
+            Send reminders now, renewals chased inside the window convert far better than a lapsed
             contract chased afterwards.
           </Alert>
         )}

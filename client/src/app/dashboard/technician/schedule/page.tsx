@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { DashboardShell } from '@/components/dashboard/DashboardShell';
-import { IconCalendar, IconMapPin, IconUser, SERVICE_ICONS } from '@/components/icons';
+import { IconCalendar, IconMapPin, IconUser } from '@/components/icons';
+import { ServiceMark } from '@/components/ServiceMark';
 import { EmptyState, Pill, Skeleton } from '@/components/ui';
 import { addressLine, cx, fmtTime, isToday, serviceLabel, titleCase, toneFor } from '@/lib/format';
 import { useApi } from '@/lib/useApi';
@@ -83,7 +84,6 @@ export default function TechnicianSchedulePage() {
 
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {jobs.map((job) => {
-                  const Icon = SERVICE_ICONS[job.serviceType] ?? IconCalendar;
                   const customer = job.customer as User;
                   return (
                     <Link
@@ -92,9 +92,7 @@ export default function TechnicianSchedulePage() {
                       className="group rounded-card border border-line bg-surface p-4 transition-colors hover:border-frost/30"
                     >
                       <div className="flex items-start justify-between gap-3">
-                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-frost/25 bg-frost/[0.08] text-frost">
-                          <Icon className="h-4 w-4" />
-                        </span>
+                        <ServiceMark type={job.serviceType} size={36} />
                         <span className="tnum text-[13px] font-semibold">
                           {fmtTime(job.scheduledStart)}
                         </span>

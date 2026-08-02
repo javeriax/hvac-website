@@ -100,7 +100,7 @@ async function run() {
   }
 
   /* ----------------------------------- users ------------------------------------ */
-  // Hash once and insert directly — bcrypt on ~35 accounts individually is slow.
+  // Hash once and insert directly, bcrypt on ~35 accounts individually is slow.
   const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
 
   const staffDocs = [
@@ -220,10 +220,11 @@ async function run() {
   const techJobCount = new Map<string, number>();
 
   /**
-   * Walk backwards through 13 months. Older months resolve to completed +
-   * invoiced + paid; the last few days stay open so every dashboard has live
-   * work sitting in it.
-   */
+ * Builds 13 months of history working backwards from today.
+ *
+ * Older months run all the way through to a paid invoice. The last few days are
+ * deliberately left mid-flow so every dashboard has live work sitting on it.
+ */
   const TOTAL_REQUESTS = 118;
 
   for (let i = 0; i < TOTAL_REQUESTS; i += 1) {
@@ -433,12 +434,12 @@ async function run() {
     job.startedAt = scheduledStart;
     job.completedAt = completedAt;
     job.report = {
-      summary: `${template.title} — resolved on site.`,
+      summary: `${template.title}, resolved on site.`,
       workPerformed: template.labor[0].split('—')[0].trim(),
       partsUsed: template.parts.map(([name, qty]) => ({ name, quantity: qty })),
       recommendations: chance(0.45)
         ? pick([
-            'Recommend enrolling in a maintenance plan — the system is past the halfway point of its service life.',
+            'Recommend enrolling in a maintenance plan, the system is past the halfway point of its service life.',
             'Return duct is undersized for the equipment; worth quoting a resize before next summer.',
             'Capacitor readings are within tolerance but trending low. Re-check at the next visit.',
             'Suggest upgrading to a MERV 13 media filter to reduce coil fouling.',
@@ -543,10 +544,11 @@ async function run() {
   }
 
   /**
-   * Guarantee cash collected today and month-to-date. Without this the daily and
-   * monthly revenue tiles read $0 whenever the seeder happens to run early in a
-   * month, which makes a working dashboard look broken during a demo.
-   */
+ * Force a few payments to land today and earlier this month.
+ *
+ * Without this the "revenue today" tile reads $0 whenever the seed happens to
+ * run on the 1st, which makes a perfectly working dashboard look broken.
+ */
   const monthStart = new Date();
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
@@ -820,7 +822,7 @@ async function run() {
         user: staff._id,
         type: 'quotation_approved',
         title: 'Quotation approved',
-        message: 'A customer approved an estimate — schedule the visit.',
+        message: 'A customer approved an estimate, schedule the visit.',
         link: '/dashboard/dispatcher',
         read: false,
         createdAt: daysAgo(0.5),
@@ -861,7 +863,7 @@ async function run() {
   console.log(`  Lifetime revenue seeded : $${Math.round(paidTotal).toLocaleString('en-US')}`);
   console.log(`  Completed jobs          : ${jobs.filter((j) => j.status === 'completed').length}`);
   console.log(`  Active contracts        : ${contracts.filter((c) => c.status !== 'expired').length}`);
-  console.log('\n  Sign in with any of these — password: ArcticAir#2026');
+  console.log('\n  Sign in with any of these, password: ArcticAir#2026');
   console.log('    admin@arcticair.com      → Administrator');
   console.log('    dispatch@arcticair.com   → Dispatcher');
   console.log('    marcus@arcticair.com     → Technician');

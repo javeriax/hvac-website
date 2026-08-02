@@ -5,8 +5,10 @@ import { IconRefresh, IconSignature } from '@/components/icons';
 import { Button, TextField } from '@/components/ui';
 
 /**
- * Canvas signature capture (bonus feature). Exports a trimmed PNG data URL,
- * which the API forwards to Cloudinary and stores against the job.
+ * Signature pad, used at the end of a job (bonus feature).
+ *
+ * Draws to a canvas, then exports a PNG data URL. The API uploads that to
+ * Cloudinary and stores the link on the job.
  */
 export function SignaturePad({
   onCapture,

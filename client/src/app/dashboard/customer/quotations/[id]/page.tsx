@@ -26,7 +26,7 @@ export default function CustomerQuotationDetailPage() {
     setBusy(true);
     try {
       await api.post(`/quotations/${id}/respond`, { decision: confirm, reason });
-      push(confirm === 'accept' ? 'Quotation approved — we will schedule you shortly' : 'Quotation declined');
+      push(confirm === 'accept' ? 'Quotation approved, we will schedule you shortly' : 'Quotation declined');
       setConfirm(null);
       await reload();
     } catch (err) {

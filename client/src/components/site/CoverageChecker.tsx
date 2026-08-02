@@ -7,7 +7,7 @@ import { SERVICE_AREAS } from '@/lib/site';
 
 type Result = { covered: true; city: string; response: string } | { covered: false } | null;
 
-/** Instant coverage lookup against the service-area list — matches city or ZIP prefix. */
+/** Instant coverage lookup against the service-area list, matches city or ZIP prefix. */
 export function CoverageChecker() {
   const [value, setValue] = useState('');
   const [result, setResult] = useState<Result>(null);

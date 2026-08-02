@@ -34,7 +34,7 @@ export const fmtDateTime = (value?: string | Date | null) =>
 export const fmtDay = (value?: string | Date | null) =>
   value ? new Date(value).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : '—';
 
-/** "3 days ago" / "in 2 weeks" — kept short for dense tables. */
+/** "3 days ago" / "in 2 weeks", kept short for dense tables. */
 export function relative(value?: string | Date | null): string {
   if (!value) return '—';
   const diff = new Date(value).getTime() - Date.now();

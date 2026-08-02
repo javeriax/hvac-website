@@ -14,7 +14,7 @@ import {
 
 const router = Router();
 
-// Plan catalogue is public — the marketing site renders it.
+// Plan catalogue is public, the marketing site renders it.
 router.get('/plans', listPlans);
 
 router.use(protect);

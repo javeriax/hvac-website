@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHero } from '@/components/site/PageHero';
 import { TestimonialWall } from '@/components/site/TestimonialWall';
-import { IconArrowRight, IconStar } from '@/components/icons';
+import { IconStar } from '@/components/icons';
 
 export const metadata: Metadata = {
   title: 'Customer Stories',
   description:
-    'Reviews and customer stories from ArcticAir HVAC clients across the Phoenix metro — emergency repairs, installations, maintenance plans and commercial contracts.',
+    'Reviews and customer stories from ArcticAir HVAC clients across the Phoenix metro, emergency repairs, installations, maintenance plans and commercial contracts.',
 };
 
 export default function TestimonialsPage() {
@@ -17,7 +17,7 @@ export default function TestimonialsPage() {
         index="07"
         eyebrow="Customer Stories"
         title="Judged on the work, not the pitch"
-        lede="Every review below comes from a completed job in our system. We publish the four-star ones too — a contractor with nothing but fives is a contractor curating."
+        lede="Every review below comes from a completed job in our system. We publish the four-star ones too, a contractor with nothing but fives is a contractor curating."
         aside={
           <div className="rounded-card border border-line bg-surface p-6 text-center lg:w-[18rem]">
             <div className="flex justify-center gap-1">
@@ -65,7 +65,6 @@ export default function TestimonialsPage() {
             </Link>
             <Link href="/request-quote" className="btn-primary btn-sm">
               Request a quote
-              <IconArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>

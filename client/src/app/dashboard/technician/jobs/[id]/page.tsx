@@ -47,7 +47,7 @@ import { Job, JobStatus, ServiceRequest, User } from '@/lib/types';
 /** Allowed forward transitions from the field. */
 const NEXT_STATUS: Partial<Record<JobStatus, { to: JobStatus; label: string; icon: typeof IconPlay }[]>> = {
   assigned: [{ to: 'en_route', label: 'Start driving', icon: IconTruck }],
-  en_route: [{ to: 'in_progress', label: 'Arrived — start work', icon: IconPlay }],
+  en_route: [{ to: 'in_progress', label: 'Arrived, start work', icon: IconPlay }],
   in_progress: [
     { to: 'completed', label: 'Complete job', icon: IconCheck },
     { to: 'on_hold', label: 'Put on hold', icon: IconClock },
@@ -238,7 +238,7 @@ export default function TechnicianJobPage() {
               {job.status === 'in_progress' && !job.report && (
                 <div className="mt-5">
                   <Alert tone="info" title="Submit the service report before closing">
-                    The system will not let a job be completed without a written report — it is what
+                    The system will not let a job be completed without a written report, it is what
                     the customer sees and what the invoice is built from.
                   </Alert>
                 </div>
@@ -637,7 +637,7 @@ export default function TechnicianJobPage() {
             label="Recommendations"
             rows={3}
             defaultValue={job?.report?.recommendations}
-            placeholder="Contactor pitting is advanced — worth quoting a replacement before next summer."
+            placeholder="Contactor pitting is advanced, worth quoting a replacement before next summer."
           />
           <TextField
             name="laborHours"

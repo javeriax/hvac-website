@@ -81,6 +81,10 @@ const NAV: Record<Role, { section: string; items: NavItem[] }[]> = {
       section: 'Sales',
       items: [{ href: '/dashboard/dispatcher/quotations', label: 'Quotations', icon: IconDoc }],
     },
+    {
+      section: 'Settings',
+      items: [{ href: '/dashboard/dispatcher/profile', label: 'Profile', icon: IconUser }],
+    },
   ],
   admin: [
     {
@@ -107,6 +111,10 @@ const NAV: Record<Role, { section: string; items: NavItem[] }[]> = {
         { href: '/dashboard/admin/plans', label: 'Plans', icon: IconSettings },
         { href: '/dashboard/admin/messages', label: 'Messages', icon: IconMail },
       ],
+    },
+    {
+      section: 'Settings',
+      items: [{ href: '/dashboard/admin/profile', label: 'Profile', icon: IconUser }],
     },
   ],
 };
@@ -209,6 +217,7 @@ export function DashboardShell({
         ))}
       </nav>
 
+      {/* Identity only. Homepage and sign out both live in the top bar now. */}
       <div className="shrink-0 border-t border-line p-3">
         <div className="flex items-center gap-3 rounded-lg px-2 py-2">
           <Avatar name={user.name} src={user.avatarUrl} size={34} />
@@ -223,27 +232,21 @@ export function DashboardShell({
               {titleCase(user.role)}
             </p>
           </div>
-          <button
-            onClick={() => {
-              logout();
-              router.replace('/login');
-            }}
-            className="grid h-8 w-8 place-items-center rounded-lg text-muted transition-colors hover:bg-raised hover:text-danger"
-            aria-label="Sign out"
-            title="Sign out"
-          >
-            <IconLogout className="h-4 w-4" />
-          </button>
         </div>
-        <Link
-          href="/"
-          className="mt-1 block rounded-lg px-3 py-2 text-2xs uppercase tracking-[0.12em] text-faint transition-colors hover:text-frost"
-        >
-          ← Back to website
+
+        {/* The top-bar Homepage link hides on narrow screens, so repeat it here
+            for the mobile drawer. */}
+        <Link href="/" className="btn-ghost btn-sm mt-1 w-full sm:hidden">
+          Homepage
         </Link>
       </div>
     </div>
   );
+
+  const signOut = () => {
+    logout();
+    router.replace('/login');
+  };
 
   return (
     <div className="flex min-h-dvh">
@@ -280,8 +283,23 @@ export function DashboardShell({
 
             <div className="flex shrink-0 items-center gap-2">
               {actions}
+
+              {/* Way back out to the public site without losing the session. */}
+              <Link href="/" className="btn-ghost btn-sm hidden sm:inline-flex">
+                Homepage
+              </Link>
+
               <NotificationBell />
               <ThemeToggle />
+
+              <button
+                onClick={signOut}
+                className="grid h-9 w-9 place-items-center rounded-lg border border-line text-muted transition-colors hover:border-danger/40 hover:text-danger"
+                aria-label="Sign out"
+                title="Sign out"
+              >
+                <IconLogout className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </header>

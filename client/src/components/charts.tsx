@@ -4,10 +4,11 @@ import { ReactNode, useId, useMemo, useState } from 'react';
 import { compactMoney, cx, num } from '@/lib/format';
 
 /**
- * Charts are hand-drawn SVG rather than a charting library. It keeps the bundle
- * small, but more importantly it lets every mark inherit the same theme tokens
- * as the rest of the product — so light/dark switching is free and the visual
- * language stays consistent with the dials and meters elsewhere.
+ * The charts are plain SVG rather than a chart library.
+ *
+ * Two reasons. It keeps the bundle small, and every mark can reference the same
+ * CSS colour variables as the rest of the app, so switching light/dark needs no
+ * extra work here.
  */
 
 export interface Point {
