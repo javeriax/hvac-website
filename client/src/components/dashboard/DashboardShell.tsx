@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Logo } from '@/components/brand';
 import { NotificationBell } from './NotificationBell';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -144,8 +144,13 @@ export function DashboardShell({
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Set while the user is deliberately signing out. Clearing the session makes
+  // the guard below fire, and without this it would tack ?next=<this page> onto
+  // the login URL and drop them straight back here after they sign in again.
+  const signingOut = useRef(false);
+
   useEffect(() => {
-    if (loading) return;
+    if (loading || signingOut.current) return;
     if (!user) {
       router.replace(`/login?next=${encodeURIComponent(pathname)}`);
     } else if (!roles.includes(user.role)) {
@@ -244,6 +249,7 @@ export function DashboardShell({
   );
 
   const signOut = () => {
+    signingOut.current = true;
     logout();
     router.replace('/login');
   };

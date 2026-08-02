@@ -26,7 +26,11 @@ const DAY_START = 7;
 const DAY_END = 19;
 
 export default function DispatcherBoardPage() {
-  const today = new Date().toISOString();
+  // Must be a stable value. A fresh timestamp on every render changes the query
+  // key, which refetches, which re-renders, and the board spins forever. The
+  // server only reads the day part anyway, so send just YYYY-MM-DD.
+  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+
   const { data: summary, loading: summaryLoading } = useApi<DispatchSummary>('/analytics/dispatch');
   const { data: jobs, loading, reload } = useApi<Job[]>('/jobs', { date: today });
   const { data: unassigned, reload: reloadUnassigned } = useApi<Job[]>('/jobs', {
