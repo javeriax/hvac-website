@@ -18,8 +18,7 @@ management sees revenue and performance on one screen.
 - [What is built](#what-is-built)
 - [Bonus tasks](#bonus-tasks)
 - [Decisions I made and why](#decisions-i-made-and-why)
-<<<<<<< HEAD
-- [Other docs](#other-docs)
+
 =======
 - [Folder layout](#folder-layout)
 >>>>>>> 9c75e43 (Update README with env setup instructions and project navigation)
