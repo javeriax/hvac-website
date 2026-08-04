@@ -50,12 +50,6 @@ export default function AdminAnalyticsPage() {
       roles={['admin']}
       title="Business analytics"
       subtitle="Revenue, operations and team performance"
-      actions={
-        <Link href="/dashboard/admin/invoices" className="btn-ghost btn-sm">
-          <IconReceipt className="h-3.5 w-3.5" />
-          Invoices
-        </Link>
-      }
     >
       {loading || !data ? (
         <div className="space-y-5">

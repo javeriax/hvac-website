@@ -2,33 +2,42 @@
 
 import { IconMoon, IconSun } from '@/components/icons';
 import { useTheme } from '@/lib/theme';
+import { cx } from '@/lib/format';
 
-export function ThemeToggle({ className }: { className?: string }) {
+/**
+ * Theme switch.
+ *
+ * The button shows the theme you will GET by clicking, not the one you are
+ * already in. A bare sun/moon icon makes people stop and work out which way
+ * round it is, so the word is spelled out next to it wherever there is room.
+ */
+export function ThemeToggle({
+  className,
+  showLabel = true,
+}: {
+  className?: string;
+  showLabel?: boolean;
+}) {
   const { theme, toggle } = useTheme();
+  const goingToLight = theme === 'dark';
+  const label = goingToLight ? 'Light' : 'Dark';
 
   return (
     <button
       onClick={toggle}
-      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-      title={`Switch to ${theme === 'dark' ? 'Frost' : 'Control Room'}`}
-      className={`relative grid h-9 w-9 place-items-center overflow-hidden rounded-lg border border-line text-muted transition-colors hover:text-ink ${className ?? ''}`}
+      aria-label={`Switch to ${label.toLowerCase()} mode`}
+      title={`Switch to ${label.toLowerCase()} mode`}
+      className={cx(
+        'inline-flex h-9 items-center gap-2 rounded-lg border border-line px-2.5 text-[13px] text-muted transition-colors hover:bg-raised hover:text-ink',
+        className,
+      )}
     >
-      <span
-        className="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)]"
-        style={{ transform: theme === 'dark' ? 'translateY(0)' : 'translateY(-100%)' }}
-      >
-        <span className="grid h-full w-full place-items-center">
-          <IconMoon className="h-4 w-4" />
-        </span>
-      </span>
-      <span
-        className="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)]"
-        style={{ transform: theme === 'dark' ? 'translateY(100%)' : 'translateY(0)' }}
-      >
-        <span className="grid h-full w-full place-items-center">
-          <IconSun className="h-4 w-4" />
-        </span>
-      </span>
+      {goingToLight ? (
+        <IconSun className="h-4 w-4 shrink-0" />
+      ) : (
+        <IconMoon className="h-4 w-4 shrink-0" />
+      )}
+      {showLabel && <span className="hidden sm:inline">{label}</span>}
     </button>
   );
 }

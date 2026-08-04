@@ -92,9 +92,7 @@ export function Navbar() {
               Track request
             </Link>
 
-            {user ? (
-              <UserMenu />
-            ) : (
+            {!user && (
               <Link href="/login" className="btn-ghost btn-sm hidden sm:inline-flex">
                 Sign in
               </Link>
@@ -103,6 +101,9 @@ export function Navbar() {
             <Link href="/request-quote" className="btn-primary btn-sm hidden md:inline-flex">
               Request a quote
             </Link>
+
+            {/* Account sits last so it anchors the far right, past the CTA. */}
+            {user && <UserMenu />}
 
             <button
               onClick={() => setOpen((o) => !o)}

@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Logo } from '@/components/brand';
 import { NotificationBell } from './NotificationBell';
+import { DashboardUserMenu } from './DashboardUserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   IconCalendar,
@@ -12,7 +13,6 @@ import {
   IconClipboard,
   IconDoc,
   IconGrid,
-  IconLogout,
   IconMail,
   IconMenu,
   IconReceipt,
@@ -239,11 +239,6 @@ export function DashboardShell({
           </div>
         </div>
 
-        {/* The top-bar Homepage link hides on narrow screens, so repeat it here
-            for the mobile drawer. */}
-        <Link href="/" className="btn-ghost btn-sm mt-1 w-full sm:hidden">
-          Homepage
-        </Link>
       </div>
     </div>
   );
@@ -288,24 +283,15 @@ export function DashboardShell({
             </div>
 
             <div className="flex shrink-0 items-center gap-2">
+              {/* Page-specific actions first, then a divider, then the controls
+                  that are the same on every screen. Keeps the two kinds of
+                  button from reading as one undifferentiated row. */}
               {actions}
-
-              {/* Way back out to the public site without losing the session. */}
-              <Link href="/" className="btn-ghost btn-sm hidden sm:inline-flex">
-                Homepage
-              </Link>
+              {actions && <span className="mx-1 hidden h-6 w-px bg-line sm:block" />}
 
               <NotificationBell />
               <ThemeToggle />
-
-              <button
-                onClick={signOut}
-                className="grid h-9 w-9 place-items-center rounded-lg border border-line text-muted transition-colors hover:border-danger/40 hover:text-danger"
-                aria-label="Sign out"
-                title="Sign out"
-              >
-                <IconLogout className="h-4 w-4" />
-              </button>
+              <DashboardUserMenu onSignOut={signOut} />
             </div>
           </div>
         </header>
