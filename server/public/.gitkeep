@@ -1,0 +1,5 @@
+This file only exists so the public/ folder is not empty and gets committed
+to git. Vercel needs the folder to be present during its build step, but
+nothing in here is ever actually served — every request is rewritten to the
+API function (see vercel.json), so no filename in this folder can shadow a
+real route.
