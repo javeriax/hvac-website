@@ -4,8 +4,21 @@ import { env } from './config/env';
 import routes from './routes';
 import { errorHandler, notFound } from './middleware/errorHandler';
 
-export function createApp() {
+interface AppOptions {
+  // on Vercel the DB connection has to happen lazily inside the request
+  // lifecycle rather than once at boot, since there is no long-running
+  // process to connect ahead of time — this lets the caller inject that wait
+  awaitReady?: () => Promise<unknown>;
+}
+
+export function createApp(options: AppOptions = {}) {
   const app = express();
+
+  if (options.awaitReady) {
+    app.use((_req, _res, next) => {
+      options.awaitReady!().then(() => next(), next);
+    });
+  }
 
   app.set('trust proxy', 1);
   app.use(
