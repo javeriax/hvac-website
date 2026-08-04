@@ -12,7 +12,15 @@ import { connectDB } from '../src/config/db';
 let connecting: Promise<unknown> | null = null;
 
 function ensureDb() {
-  if (!connecting) connecting = connectDB();
+  if (!connecting) {
+    // If this attempt fails, clear the cache so the next request tries a
+    // fresh connection instead of replaying the same rejected promise on
+    // every request for as long as this instance stays warm.
+    connecting = connectDB().catch((err) => {
+      connecting = null;
+      throw err;
+    });
+  }
   return connecting;
 }
 
