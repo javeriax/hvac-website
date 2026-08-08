@@ -32,7 +32,10 @@ export function LoginForm() {
 
   // Already signed in? Do not sit on the login screen.
   useEffect(() => {
-    if (!authLoading && user) router.replace(next || HOME_FOR[user.role]);
+    // Land on the public site, not straight into a dashboard. People often sign
+    // in to do something on the website itself, and the header now carries an
+    // obvious route into the dashboard for when they do want it.
+    if (!authLoading && user) router.replace(next || '/');
   }, [authLoading, user, router, next]);
 
   const submit = async (e: FormEvent) => {
@@ -41,7 +44,7 @@ export function LoginForm() {
     setBusy(true);
     try {
       const signedIn = await login(email, password);
-      router.replace(next || HOME_FOR[signedIn.role]);
+      router.replace(next || '/');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Sign in failed');
       setBusy(false);

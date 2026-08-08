@@ -8,6 +8,7 @@ import { NotificationBell } from './NotificationBell';
 import { DashboardUserMenu } from './DashboardUserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import {
+  IconArrowLeft,
   IconCalendar,
   IconChart,
   IconClipboard,
@@ -18,6 +19,7 @@ import {
   IconReceipt,
   IconSettings,
   IconShield,
+  IconStar,
   IconTruck,
   IconUser,
   IconUsers,
@@ -109,6 +111,7 @@ const NAV: Record<Role, { section: string; items: NavItem[] }[]> = {
         { href: '/dashboard/admin/technicians', label: 'Technicians', icon: IconTruck },
         { href: '/dashboard/admin/equipment', label: 'Equipment', icon: IconWrench },
         { href: '/dashboard/admin/plans', label: 'Plans', icon: IconSettings },
+        { href: '/dashboard/admin/reviews', label: 'Reviews', icon: IconStar },
         { href: '/dashboard/admin/messages', label: 'Messages', icon: IconMail },
       ],
     },
@@ -276,6 +279,17 @@ export function DashboardShell({
             >
               <IconMenu className="h-4.5 w-4.5" />
             </button>
+
+            {/* Explicit way out of the admin area. It was previously only in a
+                dropdown, which is not somewhere people look for "back". */}
+            <Link
+              href="/"
+              className="hidden h-9 shrink-0 items-center gap-2 rounded-lg border border-line px-3 text-[13px] text-muted transition-colors hover:bg-raised hover:text-ink sm:inline-flex"
+              title="Back to the public website"
+            >
+              <IconArrowLeft className="h-4 w-4" />
+              Website
+            </Link>
 
             <div className="min-w-0 flex-1">
               <h1 className="truncate text-[17px] font-semibold leading-tight">{title}</h1>

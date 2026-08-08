@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { PageHero } from '@/components/site/PageHero';
-import { TestimonialWall } from '@/components/site/TestimonialWall';
+import { TestimonialsSection } from '@/components/site/TestimonialsSection';
 import { IconStar } from '@/components/icons';
 
 export const metadata: Metadata = {
@@ -51,23 +50,8 @@ export default function TestimonialsPage() {
       />
 
       <section className="mx-auto max-w-7xl px-5 py-16 lg:py-20">
-        <TestimonialWall />
+        <TestimonialsSection />
 
-        <div className="mt-14 rounded-card border border-line bg-surface p-8 text-center">
-          <h2 className="text-[22px] font-semibold">Been a customer?</h2>
-          <p className="mx-auto mt-3 max-w-md text-[14px] leading-relaxed text-muted">
-            Every completed job in your portal has a feedback link. Honest criticism is more useful
-            to us than another five stars.
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href="/login" className="btn-ghost btn-sm">
-              Sign in to leave feedback
-            </Link>
-            <Link href="/request-quote" className="btn-primary btn-sm">
-              Request a quote
-            </Link>
-          </div>
-        </div>
       </section>
     </>
   );

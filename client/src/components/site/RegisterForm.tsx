@@ -53,7 +53,8 @@ export function RegisterForm() {
           zip: String(fd.get('zip') ?? ''),
         },
       });
-      router.replace(HOME_FOR[user.role]);
+      // Same as sign-in: stay on the public site and let them choose to go in.
+      router.replace('/');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Could not create your account');
       setBusy(false);

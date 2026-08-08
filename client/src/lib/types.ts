@@ -278,6 +278,9 @@ export interface Testimonial {
   rating: number;
   quote: string;
   serviceType: string;
+  isPublished: boolean;
+  customer?: User | string;
+  createdAt: string;
 }
 
 export interface ContactMessage {

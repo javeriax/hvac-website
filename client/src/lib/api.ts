@@ -64,7 +64,11 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     throw new ApiError(res.status, payload.message ?? 'Request failed', payload.details);
   }
 
-  return (payload.data ?? payload) as T;
+  // Unwrap the { success, data } envelope. Check for the key rather than using
+  // `payload.data ?? payload`, because an endpoint that legitimately answers
+  // with data: null would otherwise hand back the whole envelope, which is
+  // truthy and makes "nothing found" look like "found something".
+  return ('data' in payload ? payload.data : payload) as T;
 }
 
 export const api = {

@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { protect, requireRole, requireStaff } from '../middleware/auth';
 import {
+  createTestimonial,
+  getMyTestimonial,
+  listAllTestimonials,
+  updateTestimonial,
   listContactMessages,
   listEquipment,
   listNotifications,
@@ -17,6 +21,14 @@ const router = Router();
 /* public */
 router.post('/contact', submitContactMessage);
 router.get('/testimonials', listTestimonials);
+
+/* customer reviews */
+router.get('/testimonials/mine', protect, requireRole('customer'), getMyTestimonial);
+router.post('/testimonials', protect, requireRole('customer'), createTestimonial);
+
+/* review moderation */
+router.get('/admin/testimonials', protect, requireRole('admin'), listAllTestimonials);
+router.patch('/admin/testimonials/:id', protect, requireRole('admin'), updateTestimonial);
 
 /* notifications */
 router.get('/notifications', protect, listNotifications);

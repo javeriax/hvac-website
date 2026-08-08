@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { IconStar } from '@/components/icons';
-import { Skeleton } from '@/components/ui';
-import { api } from '@/lib/api';
+import { useCallback, useEffect, useState } from 'react';
+import { IconAlert, IconRefresh, IconStar } from '@/components/icons';
+import { Button, Skeleton } from '@/components/ui';
+import { ApiError, api } from '@/lib/api';
 import { cx, serviceLabel } from '@/lib/format';
 import { Testimonial } from '@/lib/types';
 
@@ -20,16 +20,45 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-/** Masonry-ish wall, column layout keeps ragged quote lengths from creating gaps. */
-export function TestimonialWall({ limit }: { limit?: number }) {
+/**
+ * The wall of published reviews.
+ *
+ * Column layout rather than a grid so quotes of different lengths do not leave
+ * holes. Note the three distinct states below: loading, failed and genuinely
+ * empty. Collapsing "the API is down" into "no reviews yet" tells the visitor
+ * something untrue about the business.
+ */
+export function TestimonialWall({ limit, refreshKey }: { limit?: number; refreshKey?: number }) {
   const [items, setItems] = useState<Testimonial[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setError(null);
+    try {
+      setItems(await api.get<Testimonial[]>('/testimonials'));
+    } catch (err) {
+      setItems(null);
+      setError(err instanceof ApiError ? err.message : 'Could not load customer stories');
+    }
+  }, []);
 
   useEffect(() => {
-    api
-      .get<Testimonial[]>('/testimonials')
-      .then(setItems)
-      .catch(() => setItems([]));
-  }, []);
+    void load();
+  }, [load, refreshKey]);
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-card border border-danger/30 bg-danger/[0.05] px-6 py-12 text-center">
+        <IconAlert className="h-6 w-6 text-danger" />
+        <p className="text-[14px] font-semibold">Could not load customer stories</p>
+        <p className="max-w-sm text-[13px] leading-relaxed text-muted">{error}</p>
+        <Button size="sm" variant="ghost" onClick={load} className="mt-1">
+          <IconRefresh className="h-3.5 w-3.5" />
+          Try again
+        </Button>
+      </div>
+    );
+  }
 
   if (!items) {
     return (
@@ -42,7 +71,11 @@ export function TestimonialWall({ limit }: { limit?: number }) {
   }
 
   if (!items.length) {
-    return <p className="text-center text-[13px] text-muted">No customer stories published yet.</p>;
+    return (
+      <p className="rounded-card border border-line bg-surface px-6 py-12 text-center text-[13.5px] text-muted">
+        No customer stories published yet. Be the first to leave one.
+      </p>
+    );
   }
 
   const visible = limit ? items.slice(0, limit) : items;

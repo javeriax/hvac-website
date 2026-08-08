@@ -2,13 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Reveal, SectionHeading } from '@/components/brand';
 import { PageHero } from '@/components/site/PageHero';
-import {
-  IconGauge,
-  IconShield,
-  IconSpark,
-  IconTruck,
-  IconUsers,
-} from '@/components/icons';
+import { IconSpark } from '@/components/icons';
 import { COMPANY, STATS, WHY_US } from '@/lib/site';
 
 export const metadata: Metadata = {
@@ -45,26 +39,65 @@ const TIMELINE = [
   },
 ];
 
-const VALUES = [
+/* Each commitment carries its own accent so the section is not four identical
+   grey cards. Tailwind cannot build class names at runtime, so the colour
+   variants are written out rather than interpolated. */
+const TONES = {
+  frost: {
+    panel: 'border-frost/30 bg-frost/[0.06]',
+    rule: 'bg-frost',
+    numeral: 'text-frost/30',
+    label: 'text-frost',
+  },
+  ember: {
+    panel: 'border-ember/30 bg-ember/[0.06]',
+    rule: 'bg-ember',
+    numeral: 'text-ember/30',
+    label: 'text-ember',
+  },
+  ok: {
+    panel: 'border-ok/30 bg-ok/[0.06]',
+    rule: 'bg-ok',
+    numeral: 'text-ok/30',
+    label: 'text-ok',
+  },
+  info: {
+    panel: 'border-info/30 bg-info/[0.06]',
+    rule: 'bg-info',
+    numeral: 'text-info/30',
+    label: 'text-info',
+  },
+} as const;
+
+const VALUES: {
+  tone: keyof typeof TONES;
+  title: string;
+  body: string;
+  proof: string;
+}[] = [
   {
-    icon: IconGauge,
+    tone: 'frost',
     title: 'Measurement over opinion',
     body: 'Every diagnosis carries meter readings. Every replacement carries a load calculation. If we cannot show you the number, we do not make the claim.',
+    proof: 'Every quote ships with the readings it was based on.',
   },
   {
-    icon: IconShield,
+    tone: 'ember',
     title: 'The honest no',
     body: 'We tell customers when a system has years left, when a repair is not worth it, and when someone closer would serve them better. It costs us jobs and earns us the next ten.',
+    proof: 'We turn down work we cannot do well, in writing.',
   },
   {
-    icon: IconUsers,
+    tone: 'ok',
     title: 'Technicians, not salespeople',
     body: 'Our field staff are paid on hours and quality scores, never on commission per system sold. The incentive to oversell simply does not exist here.',
+    proof: 'Nobody here earns more by selling you a bigger unit.',
   },
   {
-    icon: IconTruck,
+    tone: 'info',
     title: 'Show up when we said',
     body: 'A four-hour window is a way of valuing our time over yours. You get a named technician, a live status, and a call if anything slips.',
+    proof: 'You see who is coming and when they left the depot.',
   },
 ];
 
@@ -158,17 +191,38 @@ export default function AboutPage() {
           </Reveal>
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2">
-            {VALUES.map((v, i) => (
-              <Reveal key={v.title} delay={i * 70}>
-                <div className="h-full rounded-card border border-line bg-surface p-6">
-                  <span className="grid h-10 w-10 place-items-center rounded-xl border border-frost/25 bg-frost/[0.08] text-frost">
-                    <v.icon className="h-4.5 w-4.5" />
-                  </span>
-                  <h3 className="mt-5 text-[16px] font-semibold">{v.title}</h3>
-                  <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">{v.body}</p>
-                </div>
-              </Reveal>
-            ))}
+            {VALUES.map((v, i) => {
+              const tone = TONES[v.tone];
+              return (
+                <Reveal key={v.title} delay={i * 70}>
+                  <div
+                    className={`relative h-full overflow-hidden rounded-card border p-7 ${tone.panel}`}
+                  >
+                    {/* colour bar across the top edge */}
+                    <span className={`absolute inset-x-0 top-0 h-1 ${tone.rule}`} aria-hidden />
+
+                    {/* oversized numeral sitting behind the text */}
+                    <span
+                      aria-hidden
+                      className={`pointer-events-none absolute -right-2 -top-3 select-none font-display text-[5.5rem] font-semibold leading-none ${tone.numeral}`}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+
+                    <h3 className="relative text-[18px] font-semibold leading-snug">{v.title}</h3>
+                    <p className="relative mt-3 text-[13.5px] leading-relaxed text-muted">
+                      {v.body}
+                    </p>
+
+                    <p
+                      className={`relative mt-5 border-t border-line pt-4 text-[12.5px] font-medium ${tone.label}`}
+                    >
+                      {v.proof}
+                    </p>
+                  </div>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -184,13 +238,19 @@ export default function AboutPage() {
           <div className="space-y-8">
             {TIMELINE.map((t, i) => {
               const onLeft = i % 2 === 0;
+              // Walk the accent along the timeline so the years read as a
+              // progression rather than five identical cyan dots.
+              const dot = ['border-frost', 'border-info', 'border-ok', 'border-warn', 'border-ember'][i % 5];
+              const year = ['text-frost', 'text-info', 'text-ok', 'text-warn', 'text-ember'][i % 5];
               return (
                 <Reveal key={t.year} delay={i * 60}>
                   <div className="relative pl-8 md:grid md:grid-cols-2 md:gap-12 md:pl-0">
                     {/* The dot is absolutely positioned, so it stays out of the grid
                         and always sits on the centre line no matter which side the
                         text is on. */}
-                    <span className="absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 border-frost bg-page md:left-1/2 md:-translate-x-1/2" />
+                    <span
+                      className={`absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 bg-page md:left-1/2 md:-translate-x-1/2 ${dot}`}
+                    />
 
                     {/* Alternate sides by naming the column explicitly. */}
                     <div
@@ -200,7 +260,7 @@ export default function AboutPage() {
                           : 'md:col-start-2 md:pl-12'
                       }
                     >
-                      <p className="tnum text-[13px] font-semibold text-frost">{t.year}</p>
+                      <p className={`tnum text-[13px] font-semibold ${year}`}>{t.year}</p>
                       <h3 className="mt-1.5 text-[16px] font-semibold">{t.title}</h3>
                       <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{t.body}</p>
                     </div>

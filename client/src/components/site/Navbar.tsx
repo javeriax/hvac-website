@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Logo } from '@/components/brand';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { UserMenu } from '@/components/site/UserMenu';
-import { IconMenu, IconPhone, IconX } from '@/components/icons';
+import { IconGrid, IconMenu, IconPhone, IconX } from '@/components/icons';
 import { HOME_FOR, SETTINGS_FOR, useAuth } from '@/lib/auth';
 import { cx } from '@/lib/format';
 import { COMPANY, SITE_NAV } from '@/lib/site';
@@ -95,6 +95,15 @@ export function Navbar() {
             {!user && (
               <Link href="/login" className="btn-ghost btn-sm hidden sm:inline-flex">
                 Sign in
+              </Link>
+            )}
+
+            {/* Signing in now leaves you on the public site, so the way into the
+                dashboard has to be visible here rather than inside a dropdown. */}
+            {user && (
+              <Link href={HOME_FOR[user.role]} className="btn-ghost btn-sm hidden sm:inline-flex">
+                <IconGrid className="h-3.5 w-3.5" />
+                My dashboard
               </Link>
             )}
 
