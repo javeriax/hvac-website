@@ -281,14 +281,15 @@ export function DashboardShell({
             </button>
 
             {/* Explicit way out of the admin area. It was previously only in a
-                dropdown, which is not somewhere people look for "back". */}
+                dropdown, which is not somewhere people look for "back". Icon
+                only, so it reads as a plain back button rather than a nav link. */}
             <Link
               href="/"
-              className="hidden h-9 shrink-0 items-center gap-2 rounded-lg border border-line px-3 text-[13px] text-muted transition-colors hover:bg-raised hover:text-ink sm:inline-flex"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-line text-muted transition-colors hover:bg-raised hover:text-ink"
+              aria-label="Back to the public website"
               title="Back to the public website"
             >
               <IconArrowLeft className="h-4 w-4" />
-              Website
             </Link>
 
             <div className="min-w-0 flex-1">
